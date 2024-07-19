@@ -27,6 +27,7 @@ object Typography2 {
         fontFamily = breathFontFamily,
         fontWeight = FontWeight.W500,
         fontSize = 20.sp,
+        lineHeight = 28.sp * 1.5
     )
     val title = TextStyle(
         fontFamily = breathFontFamily,
@@ -37,16 +38,19 @@ object Typography2 {
         fontFamily = breathFontFamily,
         fontWeight = FontWeight.W600,
         fontSize = 16.sp,
+        lineHeight = 22.sp * 1.5
     )
     val bodyText = TextStyle(
         fontFamily = breathFontFamily,
         fontWeight = FontWeight.W500,
         fontSize = 14.sp,
+        lineHeight = 24.sp * 1.5
     )
     val body1 = TextStyle(
         fontFamily = breathFontFamily,
         fontWeight = FontWeight.W500,
         fontSize = 16.sp,
+        lineHeight = 22.sp * 1.5
     )
     val body2 = TextStyle(
         fontFamily = breathFontFamily,
@@ -67,6 +71,7 @@ object Typography2 {
         fontFamily = breathFontFamily,
         fontWeight = FontWeight.W600,
         fontSize = 16.sp,
+        lineHeight = 20.sp * 1.5
     )
     val caption = TextStyle(
         fontFamily = breathFontFamily,
