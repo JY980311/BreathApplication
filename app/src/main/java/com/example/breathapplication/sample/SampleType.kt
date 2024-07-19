@@ -17,6 +17,7 @@ import com.example.breathapplication.ui.theme.Secondary1
 import com.example.breathapplication.ui.theme.Secondary2
 import com.example.breathapplication.ui.theme.Typography2
 
+/** 폰트 사용법 입니다! 참고 하세요! */
 @Composable
 fun SampleType() {
     Column(
@@ -70,6 +71,7 @@ fun SampleType() {
     }
 }
 
+/** color 사용법 입니다! 참고 하세요! */
 @Composable
 fun TestColor() {
     Column(
