@@ -1,4 +1,4 @@
-package com.example.breathapplication.calendar
+package com.example.breathapplication.calendar.ui
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
