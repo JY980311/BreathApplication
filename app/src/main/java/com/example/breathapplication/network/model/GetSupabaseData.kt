@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GetSupabaseDate(
+data class GetSupabaseData(
     @Json(name = "content")
     val content: String,
     @Json(name = "tag_1")
