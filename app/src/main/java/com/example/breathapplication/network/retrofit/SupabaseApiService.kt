@@ -1,6 +1,6 @@
 package com.example.breathapplication.network.retrofit
 
-import com.example.breathapplication.network.model.GetSupabaseDate
+import com.example.breathapplication.network.model.GetSupabaseData
 import com.example.breathapplication.network.model.PostSupabaseData
 import retrofit2.Response
 import retrofit2.http.Body
@@ -15,7 +15,7 @@ interface SupabaseApiService {
     suspend fun getAllPost(
         @Query("select") select: String = "*",
         @Query("apikey") apikey: String = "api키값으로 넣으세요!",
-    ) : List<GetSupabaseDate>
+    ) : List<GetSupabaseData>
     @Headers(
         "apikey: api키값으로 넣으세요!",
         "Authorization: Bearer api키값으로 넣으세요!",
