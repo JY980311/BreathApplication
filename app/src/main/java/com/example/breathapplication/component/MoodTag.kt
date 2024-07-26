@@ -10,10 +10,6 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,20 +21,19 @@ import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Typography2
 
 @Composable
-fun MoodTag(tag: String) {
-    var isClicked by remember { mutableStateOf(false) }
+fun MoodTag(tag: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .height(33.dp)
             .wrapContentWidth(align = Alignment.Start)
-            .border(1.dp, if (isClicked) Greyscale7 else Greyscale10, RoundedCornerShape(6.dp))
+            .border(1.dp, if (isSelected) Greyscale7 else Greyscale10, RoundedCornerShape(6.dp))
             .background(Greyscale8, RoundedCornerShape(6.dp))
-            .clickable { isClicked = !isClicked },
+            .clickable { onClick() },
     ) {
         Text(
             text = tag,
             style = Typography2.body2,
-            color = if (isClicked) Primary1 else Greyscale5,
+            color = if (isSelected) Primary1 else Greyscale5,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
         )
     }
