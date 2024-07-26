@@ -15,12 +15,12 @@ import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Typography2
 
 @Composable
-fun CompleteButton(text: String){
+fun CompleteButton(text: String, onClick: () -> Unit){
     Button(
         modifier = Modifier
             .height(52.dp)
             .fillMaxWidth(),
-        onClick = { },
+        onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
             containerColor =  Primary1,
             contentColor = Greyscale1
