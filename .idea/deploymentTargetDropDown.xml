@@ -2,13 +2,19 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ContentPreview">
+      <entry key="CompleteDiaryScreenPreview">
         <State />
       </entry>
-      <entry key="ContentPreview">
+      <entry key="ContinueDiaryScreenPreview">
         <State />
       </entry>
-      <entry key="TestPreview">
+      <entry key="ReadDiaryScreenPreview">
+        <State />
+      </entry>
+      <entry key="ReadDiaryScreenPreview2">
+        <State />
+      </entry>
+      <entry key="WriteDiaryScreenPreview">
         <State />
       </entry>
       <entry key="app">
