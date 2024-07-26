@@ -11,10 +11,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,8 +24,7 @@ import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Typography2
 
 @Composable
-fun DisturbButton(tag: String) {
-    var isClicked by remember { mutableStateOf(false) }
+fun DisturbButton(tag: String, isClicked: Boolean, onClick: () -> Unit) {
     var image = when(tag) {
         "과한 운동" -> R.drawable.ic_exercises
         "카페인" -> R.drawable.ic_coffee
@@ -41,7 +36,7 @@ fun DisturbButton(tag: String) {
             .height(72.dp)
             .border(1.dp, if (isClicked) Greyscale7 else Greyscale10, RoundedCornerShape(6.dp))
             .background(Greyscale10, RoundedCornerShape(6.dp))
-            .clickable { isClicked = !isClicked },
+            .clickable { onClick() },
     ) {
         Text(
             text = tag,
