@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,6 +20,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "ASLLEP_API_KEY", gradleLocalProperties(rootDir).getProperty("asleep_api_key"))
+        buildConfigField("String", "SUPABASE_API_KEY", gradleLocalProperties(rootDir).getProperty("supabase_api_key"))
+        buildConfigField("String", "GOOGLE_AI_API_KEY", gradleLocalProperties(rootDir).getProperty("google_ai_api_key"))
+
     }
 
     buildTypes {
@@ -92,4 +99,7 @@ dependencies {
 
     // Coil
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Google AI
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 }
