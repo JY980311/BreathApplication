@@ -21,10 +21,11 @@ class GeminiViewModel: ViewModel() {
 
     val chat = generativeModel.startChat(
         history = listOf(
-            content(role = "user") { text("너는 수면 패턴을 분석해주는 상담가야") },
+            content(role = "user") { text("너는 수면 패턴을 분석해주는 전문적인 상담가야") },
             content(role = "model") { text("좋습니다! 항상 부드럽게 말을 하면서 수면 패턴을 분석해드릴게요.") }
         )
     )
+
     fun generateText(prompt: String = "요즘 잠을 너무 못 자 ㅠㅠ") {
         _textGenerationResult.value = "스토리 생성 중"
 
