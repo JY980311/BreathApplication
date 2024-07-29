@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -32,20 +35,22 @@ import com.example.breathapplication.component.MyMoodTag
 import com.example.breathapplication.component.MySleepTag
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.component.TobBar
+import com.example.breathapplication.navigation.ButtonNavItem
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
-import com.example.breathapplication.viewmodel.ReadDiaryScreenViewModel
-import com.example.breathapplication.viewmodel.WriteDiaryScreenViewModel
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReadDiaryScreen(navController: NavHostController, writeViewModel: WriteDiaryScreenViewModel = viewModel(), readViewModel: ReadDiaryScreenViewModel = viewModel()) {
+fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : DiaryScreenViewModel) {
     Column(
         Modifier
             .background(Color.Black)
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     )
     {
-        TobBar(title = writeViewModel.TopbarCrrentDate)
+        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,7 +58,7 @@ fun ReadDiaryScreen(navController: NavHostController, writeViewModel: WriteDiary
         ) {
             item{
                 Column {
-                    MyDiaryScreen(readViewModel = readViewModel, writeViewModel = writeViewModel )
+                    MyDiaryScreen(diaryScreenViewModel)
                     Spacer(modifier = Modifier.height(41.dp))
 
                     Text(
@@ -77,7 +82,10 @@ fun ReadDiaryScreen(navController: NavHostController, writeViewModel: WriteDiary
                     }
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CompleteButton("일기 이어서 쓰기", onClick = { writeViewModel.isContinueWriting = true })
+                    CompleteButton("일기 이어서 쓰기", onClick = {
+                        diaryScreenViewModel.isContinueWriting = true
+                        navController.navigate(ButtonNavItem.ContinueDiaryScreen.route)
+                    })
                     Spacer(modifier = Modifier.height(10.dp))
 
                     NormalButton(text = "일기 수정하기", onClick = {})
@@ -99,13 +107,11 @@ fun MyMoodTag(tags: List<String>) {
 }
 
 @Composable
-fun MySleepTag(tags: List<String>) {
+fun MySleepTag(tag: String) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        tags.forEach { tag ->
-            MySleepTag(tag)
-        }
+        MySleepTag(tag)
     }
 }
 
@@ -114,5 +120,5 @@ fun MySleepTag(tags: List<String>) {
 @Composable
 fun ReadDiaryScreenPreview() {
     val navController = rememberNavController()
-    ReadDiaryScreen(navController)
+    ReadDiaryScreen(navController = navController, diaryScreenViewModel = viewModel())
 }

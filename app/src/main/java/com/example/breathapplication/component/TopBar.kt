@@ -18,31 +18,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.breathapplication.R
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Typography2
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TobBar(title: String) {
+fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null) {
     TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp),
         navigationIcon = {
-            Row(
-                modifier = Modifier
-                    .padding(start = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Start,
-            ) {
-                Icon(
-                    modifier = Modifier.fillMaxHeight(),
-                    painter = painterResource(id = R.drawable.ic_calendar),
-                    contentDescription = "calendar",
-                    tint = Greyscale2,
-                )
+            if(leftIcon != null) {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                ) {
+                    Icon(
+                        modifier = Modifier.fillMaxHeight(),
+                        painter = painterResource(id = leftIcon),
+                        contentDescription = "calendar",
+                        tint = Greyscale2,
+                    )
+                }
             }
         },
         title = {
@@ -63,18 +64,20 @@ fun TobBar(title: String) {
             }
         },
         actions = {
-            Row(
-                modifier = Modifier
-                    .padding(end = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.End,
-            ) {
-                Icon(
-                    modifier = Modifier.fillMaxHeight(),
-                    painter = painterResource(id = R.drawable.ic_setting),
-                    contentDescription = "setting",
-                    tint = Greyscale2
-                )
+            if(rightIcon != null) {
+                Row(
+                    modifier = Modifier
+                        .padding(end = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.End,
+                ) {
+                    Icon(
+                        modifier = Modifier.fillMaxHeight(),
+                        painter = painterResource(id = rightIcon),
+                        contentDescription = "setting",
+                        tint = Greyscale2
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(

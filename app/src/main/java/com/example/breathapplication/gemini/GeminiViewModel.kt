@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.breathapplication.BuildConfig
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,12 +19,21 @@ class GeminiViewModel: ViewModel() {
     private val _textGenerationResult = MutableStateFlow<String?>(null)
     val textGenerationResult = _textGenerationResult.asStateFlow()
 
-    fun generateText(prompt: String = "재미있는 시를 만들어줘") {
+    val chat = generativeModel.startChat(
+        history = listOf(
+            content(role = "user") { text("너는 수면 패턴을 분석해주는 상담가야") },
+            content(role = "model") { text("좋습니다! 항상 부드럽게 말을 하면서 수면 패턴을 분석해드릴게요.") }
+        )
+    )
+    fun generateText(prompt: String = "요즘 잠을 너무 못 자 ㅠㅠ") {
         _textGenerationResult.value = "스토리 생성 중"
+
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = generativeModel.generateContent(prompt)
-                _textGenerationResult.value = result.text
+                val result2 = chat.sendMessage(prompt)
+                _textGenerationResult.value = result2.text
             } catch (e: Exception) {
                 _textGenerationResult.value = "스토리 생성 실패"
             }
