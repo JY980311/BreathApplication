@@ -234,7 +234,6 @@ fun Push(navController: NavHostController) {
                     style = Typography2.body1,
                     color = Greyscale2
                 )
-
                 Spacer(modifier = Modifier.width(50.dp))
                 val checked = remember { mutableStateOf(true) }
                 Switch(

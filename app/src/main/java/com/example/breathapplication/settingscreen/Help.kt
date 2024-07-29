@@ -69,6 +69,7 @@ fun Help(navController: NavHostController) {
                 Spacer(modifier = Modifier.weight(1f))
             }
         }
+
         Spacer(modifier = Modifier.height(110.dp))
         Box(
             modifier = Modifier

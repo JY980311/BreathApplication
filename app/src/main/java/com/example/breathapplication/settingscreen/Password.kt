@@ -88,7 +88,6 @@ fun Password(navController: NavHostController) {
                 color = Greyscale2,
             )
         }
-
         Spacer(modifier = Modifier.height(194.dp))
         var prevPassword by remember { mutableStateOf("") }
         BasicTextField(

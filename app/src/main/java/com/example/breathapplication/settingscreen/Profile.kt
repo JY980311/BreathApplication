@@ -285,7 +285,6 @@ fun Profile(navController: NavHostController) {
                 }
             }
         }
-
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {navController.navigate(SettingNavItem.Setting.route)},

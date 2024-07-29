@@ -98,7 +98,6 @@ fun SettingHeader() {
             color = Greyscale2
         )
     }
-
     Spacer(modifier = Modifier.height(216.dp))
 }
 
