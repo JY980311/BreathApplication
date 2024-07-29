@@ -1,47 +1,52 @@
 package com.example.breathapplication.gemini.chat
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.breathapplication.BuildConfig
+import com.example.breathapplication.R
 import com.example.breathapplication.gemini.chat.data.ChatData
+import com.example.breathapplication.gemini.chat.data.Questions
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class ChatViewModel: ViewModel() {
-    private val _conversation = MutableStateFlow(listOf(ChatData.Message.initConv, ChatData.Message.secondConv))
+class ChatViewModel : ViewModel() {
+
+    private val _conversation =
+        MutableStateFlow(listOf(ChatData.Message.initConv, ChatData.Message.secondConv))
     val conversation = _conversation.asStateFlow()
 
+    /** 제미나이한테 답변을 보내고 받으면 앞에 있는 대화 데이터랑 합쳐서 보여주는 함수 */
+    private val _textGenerationResult = MutableStateFlow<String?>(null)
+    val textGenerationResult = _textGenerationResult.asStateFlow()
+
+    /** 사용자가 입력한 텍스트 */
     private val _textValue = MutableStateFlow("")
     val textValue = _textValue.asStateFlow()
 
+    /** 저장된 채팅 데이터 */
     private val savedChats = mutableListOf<ChatData.Message>()
 
-    private val fakeQuestions = mutableListOf(
-        "성별을 입력해 주세요!",
-        "직업을 간단하게 입력해 주세요! (ex: 대학생, 직장인 등)",
-        "평소 잠자리에 드는 시간을 입력해 주세요!",
-        "평소 일어나는 시간을 입력해 주세요!",
-        "주말에 잠자리에 드는 시간과 일어나는 시간을 입력해 주세요!",
-        "낮잠을 자는 경우, 하루에 몇 번 자고 얼마나 자는지 입력해 주세요!",
-        "잠들기 전에 카페인이나 알코올을 섭취하시나요? 그렇다면 어느 정도 섭취하시나요?",
-        "잠자리에 들기 전에 전자 기기를 사용하시나요? 그렇다면 어떤 종류의 기기를 얼마나 사용하시나요?",
-        "잠자리에 들기 전에 책을 읽거나 TV를 보거나 다른 활동을 하시나요? 그렇다면 어떤 활동을 얼마나 오랫동안 하시나요?",
-        "운동을 하시나요? 그렇다면 주당 몇 번, 얼마나 운동하시나요?",
-        "스트레스를 많이 받으시는 편입니까? 그렇다면 어떤 종류의 스트레스를 받으시나요?",
-        "잠들기까지 얼마나 걸리는지 입력해 주세요!",
-        "밤중에 몇 번 일어나는지 입력해 주세요!",
-        "일어난 후 다시 잠들기까지 얼마나 걸리는지 입력해 주세요!",
-        "아침에 기분이 어떠신가요? (예: 상쾌함, 피곤함, 무기력함 등)",
-        "낮에 졸음을 느끼시나요? 그렇다면 얼마나 자주 졸음을 느끼시나요?",
-        "충분한 수면을 취했다고 느끼시나요?",
-        "최근 1개월 동안 수면 패턴에 변화가 있었나요? 그렇다면 어떤 변화가 있었나요?",
-        "만성 질환이 있으신가요? 그렇다면 어떤 질환이 있으신가요?",
-        "최근 1개월 동안 약을 복용하셨나요? 그렇다면 어떤 약을 복용하셨나요?",
-        "정신 건강 문제로 진단을 받은 적이 있으신가요? 그렇다면 어떤 문제로 진단을 받으셨나요?"
-    )
+    /** 가짜 질문 데이터 */
+    private val fakeQuestions =
+        Questions.questions.subList(1, Questions.questions.size).map { index ->
+            "${index.id}. ${index.text}"
+        }.toMutableList()
 
+    /** 저장된 채팅 데이터를 Prompt에 질문 할 형식으로 만들어줌 */
+    fun generatePrompt(): String {
+        return Questions.questions.mapIndexed { index, question ->
+            "${question.id}. ${question.text} : ${savedChats.getOrNull(index)?.text ?: "정보없음"}"
+        }.joinToString("\n")
+    }
+
+    /** 사용자 채팅을 보내면 작동하는 부분 */
     fun sendChat(msg: String) {
         val myChat = ChatData.Message(
             text = msg,
@@ -50,7 +55,7 @@ class ChatViewModel: ViewModel() {
 
         viewModelScope.launch {
 
-            savedChats.add(myChat)
+            savedChats.add(myChat) // 사용자가 입력한 채팅을 저장
 
             _conversation.emit(_conversation.value + myChat)
 
@@ -60,22 +65,100 @@ class ChatViewModel: ViewModel() {
         }
     }
 
+    /** 제미나이한테 답변을 보내고 받으면 앞에 있는 대화 데이터랑 합쳐서 보여주는 함수 */
+    fun geminiSendChat(msg: String) {
+        val myChat = ChatData.Message(
+            text = msg,
+            author = ChatData.Author.me
+        )
+
+        viewModelScope.launch {
+
+            _conversation.emit(_conversation.value + myChat)
+
+            delay(1000)
+
+            _conversation.emit(_conversation.value + generateText())
+        }
+    }
+
+    /** 가짜 질문 데이터를 순서대로 보내주고 마지막에 말을 하는 부분 */
     private fun getQuestion(): ChatData.Message {
-        val question = if(fakeQuestions.isEmpty()) {
-            "수고했습니다! 답변을 모두 입력하셨습니다. 결과를 확인하시겠습니까?\n ${savedChats.joinToString("\n") { it.text }}"
+        val question = if (fakeQuestions.isEmpty()) {
+            "수고했습니다! 수면 패턴 분석을 진행하고 싶으시면 '좋습니다' 라고 입력해주시고 처음부터 다시하고 싶으시면 '다시하기' 라고 입력해주세"
         } else {
             fakeQuestions.removeAt(0)
         }
 
         return ChatData.Message(
             text = question,
-            author = ChatData.Author.bot
+            author = ChatData.Author.bot,
+            icon = R.drawable.ic_sheepbot
         )
     }
 
-    fun getText( newText:String ) {
+    /** 사용자가 입력한 텍스트를 가져오는 함수 */
+    fun getText(newText: String) {
         _textValue.update {
             newText
+        }
+    }
+
+    /** 다시할게요 라고 입력하면 모든 대화내용 초기화 하고 차음부터 다시 질문 */
+    fun resetChat() {
+        savedChats.clear()
+        fakeQuestions.clear()
+        fakeQuestions.addAll(Questions.questions.subList(1, Questions.questions.size).map { index ->
+            "${index.id}. ${index.text}"
+        }.toMutableList())
+        _conversation.value = (listOf(ChatData.Message.initConv, ChatData.Message.secondConv))
+    }
+
+
+    /** 제미나이 생성 하는 부분 */
+    private val generativeModel = GenerativeModel(
+        modelName = "gemini-pro",
+        apiKey = BuildConfig.GOOGLE_AI_API_KEY
+    )
+
+    /** 제미나이한테 답변을 보내기 전에 히스토리를 통해 더해져서 보내게 해주는 부분 */
+    val chat = generativeModel.startChat(
+        history = listOf(
+            content(role = "user") { text("너는 수면 패턴을 분석해주는 상담가야. 내가 형식에 맞게 대답을 보내줄게 해당 대답을 통해 전문적으로 분석해주고 답을 정확하게 해줘") },
+            content(role = "model") { text("좋습니다! 형식에 맞는 답을 보내주시면 제가 전문적으로 분석을 하겠습니다.") }
+        )
+    )
+
+    /** 제미나이한테 생성된 prompt를 통해 보내는 함수 */
+    fun generateText(): ChatData.Message {
+        _textGenerationResult.value = "수면 패턴을 분석 중 입니다. 잠시만 기다려주세요."
+
+        val prompt = generatePrompt()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result2 = chat.sendMessage(prompt)
+                _textGenerationResult.value = result2.text
+            } catch (e: Exception) {
+                _textGenerationResult.value = "스토리 생성 실패"
+            }
+        }
+
+        return ChatData.Message(
+            text = _textGenerationResult.value!!,
+            author = ChatData.Author.bot,
+            icon = R.drawable.ic_sheepbot
+        )
+    }
+
+    /** 제미나이한테 답변을 보내고 받으면 앞에 있는 대화 데이터랑 합쳐서 보여주는 함수 */
+    fun addBotMessage(message: String) {
+        val botChat = ChatData.Message(
+            text = message,
+            author = ChatData.Author.bot,
+        )
+        viewModelScope.launch {
+            _conversation.emit(_conversation.value + botChat)
         }
     }
 }
