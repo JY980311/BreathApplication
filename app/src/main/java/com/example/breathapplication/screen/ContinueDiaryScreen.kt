@@ -234,30 +234,11 @@ fun CompleteDialog2(diaryScreenViewModel: DiaryScreenViewModel, navController: N
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "일기를 모두 완성했어요!",
+                    text = "일기를 모두 완성했어요!\n완성된 일기는 나의 수면을 되돌아보는 데\n도움이 될 거에요.\n\n숨소리가 ${diaryScreenViewModel.name.value}님의 꿀잠을\n응원할게요!",
                     style = Typography2.body1,
                     color = Greyscale2,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    text = "완성된 일기는 나의 수면을 되돌아보는 데",
-                    style = Typography2.body1,
-                    color = Greyscale2,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "도움이 될 거에요.\n숨소리가 ${diaryScreenViewModel.name.value}님의 꿀잠을",
-                    style = Typography2.body1,
-                    color = Greyscale2,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "응원할게요!",
-                    style = Typography2.body1,
-                    color = Greyscale2,
-                    textAlign = TextAlign.Center
-                )
-
                 Spacer(modifier = Modifier.height(40.dp))
 
                 CompleteButton("완성된 일기 보러가기", onClick = {

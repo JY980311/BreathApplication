@@ -167,13 +167,7 @@ fun CompleteDialog1(diaryScreenViewModel: DiaryScreenViewModel, navController : 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "일기 작성을 마치셨네요!",
-                    style = Typography2.body1,
-                    color = Greyscale2,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "수면 측정 후 일기를 이어 쓸 수 있어요.\n수면 측정을 바로 시작할까요?",
+                    text = "일기 작성을 마치셨네요!\n수면 측정 후 일기를 이어 쓸 수 있어요.\n\n수면 측정을 바로 시작할까요?",
                     style = Typography2.body1,
                     color = Greyscale2,
                     textAlign = TextAlign.Center
