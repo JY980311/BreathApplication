@@ -19,6 +19,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
 import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.ui.theme.Greyscale10
@@ -34,26 +37,26 @@ import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Primary2
 import com.example.breathapplication.ui.theme.Typography2
-import com.example.breathapplication.viewmodel.CompleteDiaryScreenViewModel
-import com.example.breathapplication.viewmodel.ReadDiaryScreenViewModel
-import com.example.breathapplication.viewmodel.WriteDiaryScreenViewModel
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: WriteDiaryScreenViewModel, viewModel: CompleteDiaryScreenViewModel) {
+fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel) {
+    val comment by diaryScreenViewModel.comment
+
     Column(
         Modifier
             .background(Color.Black)
             .fillMaxWidth()
     ) {
-        TobBar(title = writeViewModel.TopbarCrrentDate)
+        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 20.dp, end = 20.dp, top = 24.dp),
         ) {
             item {
-                MyDiaryScreen(readViewModel = readViewModel, writeViewModel = writeViewModel)
+                MyDiaryScreen(diaryScreenViewModel)
             }
             item {
                 Column {
@@ -77,7 +80,7 @@ fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel:
                         color = Greyscale2
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    MyMoodTag(listOf("푹 잤어요"))
+                    MyMoodTag(listOf(diaryScreenViewModel.completeSleepTag.value))
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
@@ -93,12 +96,12 @@ fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel:
 
                     ){
                         Icon(
-                            painter = painterResource(R.drawable.ic_fresh_blue),
+                            painter = painterResource(if(diaryScreenViewModel.completeConditionTag.value == "개운했어요") R.drawable.ic_fresh_blue else R.drawable.ic_tired_blue),
                             contentDescription = "기분 아이콘",
                             tint = Color.Unspecified,
                         )
                         Spacer(modifier = Modifier.width(14.dp))
-                        MySleepTag(tags = listOf("개운했어요!"))
+                        MySleepTag(diaryScreenViewModel.completeConditionTag.value)
                     }
                     Spacer(modifier = Modifier.height(36.dp))
                     Box(
@@ -127,7 +130,15 @@ fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel:
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_slide_3),
+                            painter = painterResource(
+                                when(diaryScreenViewModel.slideValue.value) {
+                                    1 -> R.drawable.ic_slide_1
+                                    2 -> R.drawable.ic_slide_2
+                                    3 -> R.drawable.ic_slide_3
+                                    4 -> R.drawable.ic_slide_4
+                                    else -> R.drawable.ic_slide_5
+                                }
+                            ),
                             contentDescription = "슬라이드",
                             tint = Color.Unspecified,
                             modifier = Modifier
@@ -185,12 +196,12 @@ fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel:
                     ) {
                         BasicTextField(
                             modifier = Modifier.padding(start = 24.dp),
-                            value = viewModel.text,
-                            onValueChange = { viewModel.text = it },
+                            value = comment,
+                            onValueChange = { diaryScreenViewModel.setComment(it) },
                             textStyle = Typography2.bodyText.copy(color = Primary2),
                             decorationBox = { innerTextField ->
                                 Text(
-                                    text = if (viewModel.text.equals("")) "마지막 한마디" else "",
+                                    text = if (diaryScreenViewModel.comment.equals("")) "마지막 한마디" else "",
                                     color = Primary2,
                                     style = Typography2.bodyText,
                                 )
@@ -208,5 +219,6 @@ fun CompleteDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel:
 @Preview(showSystemUi = true)
 @Composable
 fun CompleteDiaryScreenPreview() {
-    CompleteDiaryScreen(writeViewModel = WriteDiaryScreenViewModel(), readViewModel= ReadDiaryScreenViewModel(), viewModel = CompleteDiaryScreenViewModel())
+    val navController = rememberNavController()
+    CompleteDiaryScreen(navController = navController, diaryScreenViewModel = DiaryScreenViewModel())
 }
