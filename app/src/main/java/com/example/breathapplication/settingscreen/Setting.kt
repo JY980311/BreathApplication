@@ -42,27 +42,27 @@ fun Setting(navController: NavHostController) {
     ) {
         SettingHeader()
         SettingButton(
-            iconId = R.drawable.ic_profil,
+            iconId = R.drawable.icon_setting,
             text = "프로필 수정",
             onClick = {navController.navigate(SettingNavItem.Profile.route)}
         )
         SettingButton(
-            iconId = R.drawable.ic_setting_lock,
+            iconId = R.drawable.icon_setting_lock,
             text = "비밀번호 변경",
             onClick = {navController.navigate(SettingNavItem.Password.route)}
         )
         SettingButton(
-            iconId = R.drawable.ic_setting_bell,
+            iconId = R.drawable.icon_setting_bell,
             text = "푸시 알림 설정",
             onClick = {navController.navigate(SettingNavItem.Push.route)}
         )
         SettingButton(
-            iconId = R.drawable.ic_setting_jjim,
+            iconId = R.drawable.icon_setting_jjim,
             text = "찜 목록",
             onClick = {navController.navigate(SettingNavItem.Pick.route)}
         )
         SettingButton(
-            iconId = R.drawable.ic_setting_ask,
+            iconId = R.drawable.icon_setting_ask,
             text = "문의하기",
             onClick = {navController.navigate(SettingNavItem.Help.route)}
         )
@@ -84,7 +84,7 @@ fun SettingHeader() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_arrow),
+                painter = painterResource(id = R.drawable.arrow),
                 contentDescription = "arrow",
                 modifier = Modifier
                     .padding(start = 16.dp)
@@ -136,7 +136,7 @@ fun SettingButton(
             )
             Spacer(modifier = Modifier.width(50.dp))
             Image(
-                painter = painterResource(id = R.drawable.ic_arrow_right),
+                painter = painterResource(id = R.drawable.icon_arrow_right),
                 contentDescription = "icon_arrow_right"
             )
         }

@@ -8,11 +8,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -47,7 +51,9 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
     Column(
         Modifier
             .background(Color.Black)
-            .fillMaxWidth()
+            .fillMaxSize()
+            .imePadding()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
         LazyColumn(
@@ -148,12 +154,19 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "SOSO!",
-                        style = Typography2.h1,
-                        color = Primary1,
-                        textAlign = TextAlign.Center
-                    )
+                        text = when(diaryScreenViewModel.slideValue.value) {
+                            1 -> "BAD.."
+                            2 -> "BAD.."
+                            3 -> "SOSO!"
+                            4 -> "SOSO!"
+                            else -> "GOOD!"
+                        },
+                            style = Typography2.h1,
+                            color = Primary1,
+                            textAlign = TextAlign.Center
+                                )
                     Spacer(modifier = Modifier.height(38.dp))
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -175,8 +188,8 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                     )
                     Spacer(modifier = Modifier.height(30.dp))
                     Box(
-                        modifier = Modifier.fillMaxWidth(), // 부모의 크기를 가득 채움
-                        contentAlignment = Alignment.Center // 자식 요소를 가운데 정렬
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_sheep),

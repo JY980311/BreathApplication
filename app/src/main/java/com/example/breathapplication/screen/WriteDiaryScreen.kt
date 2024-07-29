@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -54,6 +58,9 @@ fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: Dia
     Column(
         Modifier
             .background(Color.Black)
+            .fillMaxSize()
+            .imePadding()
+            .windowInsetsPadding(WindowInsets.safeDrawing)
     )
     {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
@@ -167,13 +174,7 @@ fun CompleteDialog1(diaryScreenViewModel: DiaryScreenViewModel, navController : 
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "일기 작성을 마치셨네요!",
-                    style = Typography2.body1,
-                    color = Greyscale2,
-                    textAlign = TextAlign.Center
-                )
-                Text(
-                    text = "수면 측정 후 일기를 이어 쓸 수 있어요.\n수면 측정을 바로 시작할까요?",
+                    text = "일기 작성을 마치셨네요!\n수면 측정 후 일기를 이어 쓸 수 있어요.\n\n수면 측정을 바로 시작할까요?",
                     style = Typography2.body1,
                     color = Greyscale2,
                     textAlign = TextAlign.Center
