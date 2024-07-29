@@ -35,7 +35,7 @@ class TestViewModel : ViewModel() {
                 val apiResponse: List<GetSupabaseData> = apiService.getAllPost()
                 _test.value = apiResponse
             } catch (e: Exception) {
-                Log.d("PostViewModel", "error: ${e}")
+                Log.d("PostViewModel", "error: $e")
             }
         }
     }
