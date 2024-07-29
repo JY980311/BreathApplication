@@ -30,19 +30,18 @@ import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Greyscale4
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
-import com.example.breathapplication.viewmodel.ReadDiaryScreenViewModel
-import com.example.breathapplication.viewmodel.WriteDiaryScreenViewModel
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: WriteDiaryScreenViewModel){
+fun MyDiaryScreen(diaryScreenViewModel: DiaryScreenViewModel){
     Column(
         Modifier
             .background(Color.Black)
             .fillMaxWidth()
     ) {
         Text(
-            text = writeViewModel.currentDate,
+            text = diaryScreenViewModel.subTitleDate.value,
             style = Typography2.subTitle,
             color = Greyscale5,
             textAlign = TextAlign.Start,
@@ -91,7 +90,7 @@ fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: Write
             contentAlignment = Alignment.TopStart
         ) {
             Text(
-                "오랜만에 운동을 많이 했더니 다리가 후들거린다..",
+                text = diaryScreenViewModel.readDiaryText.value,
                 style = Typography2.bodyText,
                 color = Greyscale4,
             )
@@ -100,7 +99,7 @@ fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: Write
         Spacer(modifier = Modifier.height(36.dp))
 
         Text(
-            text = "${readViewModel.name.value}님은 ${writeViewModel.date},",
+            text = "${diaryScreenViewModel.name.value}님은 ${diaryScreenViewModel.subHeadDate.value},",
             style = Typography2.subHead,
             color = Greyscale2,
         )
@@ -111,7 +110,7 @@ fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: Write
             verticalAlignment = Alignment.CenterVertically
 
         ){
-            MyMoodTag(listOf("과한 운동을", "과음을"))
+            MyMoodTag(diaryScreenViewModel.readSleepTag)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "했고",
@@ -135,7 +134,7 @@ fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: Write
             verticalAlignment = Alignment.CenterVertically
 
         ){
-            MySleepTag(listOf("내일이 기대되는"))
+            MySleepTag(diaryScreenViewModel.readMoodTag.value)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "기분이었어요.",
@@ -151,5 +150,5 @@ fun MyDiaryScreen(readViewModel: ReadDiaryScreenViewModel, writeViewModel: Write
 @Preview(showSystemUi = true)
 @Composable
 fun MyDiaryScreenPreview() {
-    MyDiaryScreen(writeViewModel = WriteDiaryScreenViewModel(), readViewModel= ReadDiaryScreenViewModel())
+    MyDiaryScreen(diaryScreenViewModel = DiaryScreenViewModel())
 }
