@@ -23,12 +23,10 @@ import com.example.breathapplication.gemini.chat.ChatScreen
 import com.example.breathapplication.gemini.chat.ChatViewModel
 import com.example.breathapplication.gemini.chat.data.ChatData
 import com.example.breathapplication.navigation.NavigationGraph
+import com.example.breathapplication.settingnavigation.SettingNavGraph
 import com.example.breathapplication.ui.theme.BreathApplicationTheme
 
 class MainActivity : ComponentActivity() {
-
-    private lateinit var requestPermissionLauncher: ActivityResultLauncher<Array<String>>
-    private val viewModel: ChatViewModel by viewModels()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,19 +34,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge() /** 상단바 투명 설정(안보이게 하기) */
 
         setContent {
-
-            val viewModel = ChatViewModel()
-
             BreathApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                 /*   val navController = rememberNavController()
-                    NavigationGraph(navController = navController)*/
-
-                    ChatScreen(viewModel)
+                    ChatScreen(viewModel = ChatViewModel())
                 }
             }
         }
