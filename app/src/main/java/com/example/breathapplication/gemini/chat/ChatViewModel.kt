@@ -85,7 +85,7 @@ class ChatViewModel : ViewModel() {
     /** 가짜 질문 데이터를 순서대로 보내주고 마지막에 말을 하는 부분 */
     private fun getQuestion(): ChatData.Message {
         val question = if (fakeQuestions.isEmpty()) {
-            "수고했습니다! 수면 패턴 분석을 진행하고 싶으시면 '좋습니다' 라고 입력해주시고 처음부터 다시하고 싶으시면 '다시하기' 라고 입력해주세"
+            "수고했습니다! 수면 패턴 분석을 진행하고 싶으시면 '좋습니다' 라고 입력해주시고 처음부터 다시하고 싶으시면 '다시하기' 라고 입력해주세요"
         } else {
             fakeQuestions.removeAt(0)
         }
@@ -137,8 +137,8 @@ class ChatViewModel : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val result2 = chat.sendMessage(prompt)
-                _textGenerationResult.value = result2.text
+                val result = chat.sendMessage(prompt)
+                _textGenerationResult.value = result.text
             } catch (e: Exception) {
                 _textGenerationResult.value = "스토리 생성 실패"
             }
