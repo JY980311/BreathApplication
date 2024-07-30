@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
@@ -27,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -213,6 +215,8 @@ fun Password(navController: NavHostController) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+        /*수정된 비밀번호 일치여부 확인*/
+        val passwordMatch = newPassword == checkNewPassword
         Box(
             modifier = Modifier
                 .size(width = 320.dp, height = 14.dp)
@@ -229,12 +233,20 @@ fun Password(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(24.dp))
         Button(
-            onClick = {navController.navigate(SettingNavItem.Setting.route)},
+            onClick = {
+                if(passwordMatch) {
+                    navController.navigate(SettingNavItem.Setting.route)
+                }
+            },
             modifier = Modifier
                 .size(width = 320.dp, height = 52.dp)
                 .align(Alignment.CenterHorizontally),
-            colors = ButtonDefaults.buttonColors(containerColor = Primary1),
-            shape = RoundedCornerShape(6.dp)
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if(passwordMatch) Primary1
+                                else Greyscale10
+            ),
+            shape = RoundedCornerShape(6.dp),
+            enabled = passwordMatch
         ) {
             Text(
                 style = Typography2.button,
