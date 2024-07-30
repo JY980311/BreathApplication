@@ -122,7 +122,11 @@ fun ChatScreen(
                 value = textField,
                 onValueChange = { viewModel.getText(it) },
                 onSendClickListener = { msg ->
-                  viewModel.sendChat(msg)
+                    when {
+                        msg == "좋습니다" -> viewModel.geminiSendChat(msg)
+                        msg == "다시하기" -> viewModel.resetChat()
+                        else -> viewModel.sendChat(msg)
+                    }
                 },
                 interactionSource = interactionSource,
             )
