@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
+import com.example.breathapplication.calendar.ui.CalendarScreen
 import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale11
@@ -56,7 +57,10 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
             .imePadding()
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
-        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
+        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
+        if(diaryScreenViewModel.isCalendarClicked.value){
+            CalendarScreen()
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

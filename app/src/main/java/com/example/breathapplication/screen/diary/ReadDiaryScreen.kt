@@ -30,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
+import com.example.breathapplication.calendar.ui.CalendarScreen
 import com.example.breathapplication.component.CompleteButton
 import com.example.breathapplication.component.MyMoodTag
 import com.example.breathapplication.component.MySleepTag
@@ -51,7 +52,10 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
             .windowInsetsPadding(WindowInsets.safeDrawing)
     )
     {
-        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
+        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
+        if(diaryScreenViewModel.isCalendarClicked.value){
+            CalendarScreen()
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
