@@ -1,4 +1,4 @@
-package com.example.breathapplication.settingnavigation
+package com.example.breathapplication.navigation.setting
 
 sealed class SettingNavItem(
     val route: String

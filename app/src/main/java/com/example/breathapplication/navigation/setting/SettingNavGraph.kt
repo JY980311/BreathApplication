@@ -1,18 +1,18 @@
-package com.example.breathapplication.settingnavigation
+package com.example.breathapplication.navigation.setting
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.breathapplication.settingscreen.Help
-import com.example.breathapplication.settingscreen.Password
-import com.example.breathapplication.settingscreen.Pick
-import com.example.breathapplication.settingscreen.Profile
-import com.example.breathapplication.settingscreen.Push
-import com.example.breathapplication.settingscreen.Setting
+import com.example.breathapplication.screen.setting.Help
+import com.example.breathapplication.screen.setting.Password
+import com.example.breathapplication.screen.setting.Pick
+import com.example.breathapplication.screen.setting.Profile
+import com.example.breathapplication.screen.setting.Push
+import com.example.breathapplication.screen.setting.Setting
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun SettingNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "setting") {
         composable(SettingNavItem.Setting.route) {
             Setting(navController)
