@@ -1,7 +1,8 @@
-package com.example.breathapplication.settingscreen
+package com.example.breathapplication.screen.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,32 +20,33 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.breathapplication.ui.theme.Greyscale10
-import com.example.breathapplication.ui.theme.Greyscale11
-import androidx.compose.material3.Text
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.breathapplication.R
-import com.example.breathapplication.settingnavigation.SettingNavItem
+import com.example.breathapplication.navigation.setting.SettingNavItem
+import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
 
 @Composable
 fun Setting(navController: NavHostController) {
     Column(
         modifier = Modifier
+            .background(color = Greyscale11)
             .fillMaxHeight()
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .background(color = Greyscale11)
+
     ) {
-        SettingHeader()
+        SettingHeader(navController)
         SettingButton(
             iconId = R.drawable.icon_setting,
             text = "프로필 수정",
@@ -74,7 +76,7 @@ fun Setting(navController: NavHostController) {
 }
 
 @Composable
-fun SettingHeader() {
+fun SettingHeader(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -92,6 +94,9 @@ fun SettingHeader() {
                 contentDescription = "arrow",
                 modifier = Modifier
                     .padding(start = 16.dp)
+                    .clickable {
+                        navController.popBackStack()
+                    }
             )
         }
         Text(

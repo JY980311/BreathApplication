@@ -1,4 +1,4 @@
-package com.example.breathapplication.screen
+package com.example.breathapplication.screen.diary
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -37,14 +37,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
+import com.example.breathapplication.calendar.ui.CalendarScreen
 import com.example.breathapplication.component.CompleteButton
 import com.example.breathapplication.component.DisturbButton
 import com.example.breathapplication.component.InputDiaryText
 import com.example.breathapplication.component.MoodTag
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.component.TobBar
-import com.example.breathapplication.navigation.ButtonNavItem
+import com.example.breathapplication.navigation.diary.DiaryNavItem
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
@@ -57,13 +59,16 @@ fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: Dia
 
     Column(
         Modifier
-            .background(Color.Black)
+            .background(color = Greyscale11)
             .fillMaxSize()
             .imePadding()
             .windowInsetsPadding(WindowInsets.safeDrawing)
     )
     {
-        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting)
+        TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
+        if(diaryScreenViewModel.isCalendarClicked.value){
+            CalendarScreen()
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -183,7 +188,7 @@ fun CompleteDialog1(diaryScreenViewModel: DiaryScreenViewModel, navController : 
 
                 NormalButton("일기 먼저 볼래요", onClick = {
                     navController.navigate(
-                        ButtonNavItem.ReadDiaryScreen.route)
+                        DiaryNavItem.ReadDiaryScreen.route)
                     diaryScreenViewModel.writeShowDialog = false
                 })
 

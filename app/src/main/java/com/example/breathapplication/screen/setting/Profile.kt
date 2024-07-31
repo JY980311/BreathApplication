@@ -1,4 +1,4 @@
-package com.example.breathapplication.settingscreen
+package com.example.breathapplication.screen.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,12 +26,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.breathapplication.R
-import com.example.breathapplication.settingnavigation.SettingNavItem
+import com.example.breathapplication.navigation.setting.SettingNavItem
 import com.example.breathapplication.ui.theme.Greyscale1
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale11
@@ -60,10 +60,10 @@ import com.example.breathapplication.ui.theme.Typography2
 fun Profile(navController: NavHostController) {
     Column(
         modifier = Modifier
+            .background(color = Greyscale11)
             .fillMaxHeight()
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .background(color = Greyscale11)
     ) {
         Box(
             modifier = Modifier
@@ -88,7 +88,7 @@ fun Profile(navController: NavHostController) {
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .clickable{
-                            navController.navigate(SettingNavItem.Setting.route)
+                            navController.popBackStack()
                         }
                 )
             }

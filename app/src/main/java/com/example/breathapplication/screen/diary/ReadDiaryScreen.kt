@@ -1,4 +1,4 @@
-package com.example.breathapplication.screen
+package com.example.breathapplication.screen.diary
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -35,7 +35,8 @@ import com.example.breathapplication.component.MyMoodTag
 import com.example.breathapplication.component.MySleepTag
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.component.TobBar
-import com.example.breathapplication.navigation.ButtonNavItem
+import com.example.breathapplication.navigation.diary.DiaryNavItem
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
@@ -45,7 +46,7 @@ import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : DiaryScreenViewModel) {
     Column(
         Modifier
-            .background(Color.Black)
+            .background(color = Greyscale11)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
     )
@@ -84,7 +85,7 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
 
                     CompleteButton("일기 이어서 쓰기", onClick = {
                         diaryScreenViewModel.isContinueWriting = true
-                        navController.navigate(ButtonNavItem.ContinueDiaryScreen.route)
+                        navController.navigate(DiaryNavItem.ContinueDiaryScreen.route)
                     })
                     Spacer(modifier = Modifier.height(10.dp))
 

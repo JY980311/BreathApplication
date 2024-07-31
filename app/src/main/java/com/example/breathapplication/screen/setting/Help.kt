@@ -1,4 +1,4 @@
-package com.example.breathapplication.settingscreen
+package com.example.breathapplication.screen.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.breathapplication.R
-import com.example.breathapplication.settingnavigation.SettingNavItem
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
@@ -38,9 +37,9 @@ import com.example.breathapplication.ui.theme.Typography2
 fun Help(navController: NavHostController) {
     Column(
         modifier = Modifier
+            .background(color = Greyscale11)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .background(color = Greyscale11)
     ) {
         Box(
             modifier = Modifier
@@ -59,7 +58,7 @@ fun Help(navController: NavHostController) {
                     contentDescription = "arrow",
                     modifier = Modifier
                         .clickable{
-                            navController.navigate(SettingNavItem.Setting.route)
+                            navController.popBackStack()
                         }
 
                 )

@@ -1,4 +1,4 @@
-package com.example.breathapplication.settingscreen
+package com.example.breathapplication.screen.setting
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,9 +20,10 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.*
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +36,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.breathapplication.R
-import com.example.breathapplication.settingnavigation.SettingNavItem
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
@@ -46,9 +46,9 @@ import com.example.breathapplication.ui.theme.Typography2
 fun Pick(navController: NavHostController) {
     Column(
         modifier = Modifier
+            .background(color = Greyscale11)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
-            .background(color = Greyscale11)
     ) {
         Header(navController = navController)
         Content()
@@ -84,7 +84,7 @@ fun Header(navController: NavHostController) {
                     .padding(start = 16.dp)
                     .align(Alignment.CenterStart)
                     .clickable{
-                        navController.navigate(SettingNavItem.Setting.route)
+                        navController.popBackStack()
                     }
             )
         }

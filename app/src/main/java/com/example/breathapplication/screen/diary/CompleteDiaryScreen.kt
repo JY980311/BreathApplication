@@ -1,4 +1,4 @@
-package com.example.breathapplication.screen
+package com.example.breathapplication.screen.diary
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -36,6 +36,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
 import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Primary1
@@ -50,7 +51,7 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
 
     Column(
         Modifier
-            .background(Color.Black)
+            .background(color = Greyscale11)
             .fillMaxSize()
             .imePadding()
             .windowInsetsPadding(WindowInsets.safeDrawing)

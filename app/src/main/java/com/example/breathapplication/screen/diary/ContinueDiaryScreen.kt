@@ -1,4 +1,4 @@
-package com.example.breathapplication.screen
+package com.example.breathapplication.screen.diary
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -54,8 +53,9 @@ import com.example.breathapplication.component.CompleteButton
 import com.example.breathapplication.component.ConditionButton
 import com.example.breathapplication.component.MoodTag
 import com.example.breathapplication.component.TobBar
-import com.example.breathapplication.navigation.ButtonNavItem
+import com.example.breathapplication.navigation.diary.DiaryNavItem
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Greyscale3
 import com.example.breathapplication.ui.theme.Greyscale7
@@ -70,7 +70,7 @@ import kotlin.math.roundToInt
 fun ContinueDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel){
     Column(
         Modifier
-            .background(Color.Black)
+            .background(color = Greyscale11)
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
@@ -248,7 +248,7 @@ fun CompleteDialog2(diaryScreenViewModel: DiaryScreenViewModel, navController: N
 
                 CompleteButton("완성된 일기 보러가기", onClick = {
                     diaryScreenViewModel.continueShowDialog = false
-                    navController.navigate(ButtonNavItem.CompleteDiaryScreen.route)
+                    navController.navigate(DiaryNavItem.CompleteDiaryScreen.route)
                 })
 
             }
