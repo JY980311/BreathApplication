@@ -17,6 +17,8 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 class DiaryScreenViewModel : ViewModel() {
 
+    var isCalendarClicked = mutableStateOf(false)
+
     /** Write Screen */
     private val _selectedDate = mutableStateOf("")
     val selectedDate: State<String> get() = _selectedDate

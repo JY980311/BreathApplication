@@ -1,5 +1,8 @@
 package com.example.breathapplication.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,13 +21,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.example.breathapplication.R
+import com.example.breathapplication.navigation.setting.SettingNavItem
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Typography2
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null) {
+fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null, navController: NavHostController? = null, diaryScreenViewModel: DiaryScreenViewModel? = null){
     TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -33,14 +41,19 @@ fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null) {
             if(leftIcon != null) {
                 Row(
                     modifier = Modifier
-                        .padding(start = 8.dp),
+                        .padding(start = 8.dp)
+                        .clickable {
+                            if (leftIcon == R.drawable.ic_calendar && diaryScreenViewModel != null) {
+                                diaryScreenViewModel.isCalendarClicked.value = !diaryScreenViewModel.isCalendarClicked.value
+                            }
+                        },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
                 ) {
                     Icon(
                         modifier = Modifier.fillMaxHeight(),
                         painter = painterResource(id = leftIcon),
-                        contentDescription = "calendar",
+                        contentDescription = "leftIcon",
                         tint = Greyscale2,
                     )
                 }
@@ -72,9 +85,19 @@ fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null) {
                     horizontalArrangement = Arrangement.End,
                 ) {
                     Icon(
-                        modifier = Modifier.fillMaxHeight(),
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .then(
+                                if (navController != null) {
+                                    Modifier.clickable {
+                                        navController.navigate(SettingNavItem.Setting.route)
+                                    }
+                                } else {
+                                    Modifier
+                                }
+                            ),
                         painter = painterResource(id = rightIcon),
-                        contentDescription = "setting",
+                        contentDescription = "rightIcon",
                         tint = Greyscale2
                     )
                 }
