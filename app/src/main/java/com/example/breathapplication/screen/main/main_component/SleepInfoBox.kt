@@ -46,7 +46,6 @@ fun SleepInfoBox(
 
     Box(
         modifier = modifier
-            .height(55.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(color = Greyscale10)
             .padding(vertical = 10.dp, horizontal = 14.dp)
