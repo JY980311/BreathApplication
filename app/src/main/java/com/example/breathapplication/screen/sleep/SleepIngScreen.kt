@@ -1,5 +1,7 @@
 package com.example.breathapplication.screen.sleep
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -18,11 +20,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
+import com.example.breathapplication.asleep.service.RecordService
 import com.example.breathapplication.component.CompleteButton
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.ui.theme.Greyscale11
@@ -31,7 +37,8 @@ import com.example.breathapplication.ui.theme.Primary2
 import com.example.breathapplication.ui.theme.Typography2
 
 @Composable
-fun SleepIngScreen() {
+fun SleepIngScreen(navController: NavHostController) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .background(color = Greyscale11)
@@ -80,10 +87,14 @@ fun SleepIngScreen() {
         )
         Spacer(modifier = Modifier.height(89.dp))
 
-        CompleteButton(text = "일어나기", onClick = {})
+        CompleteButton(text = "일어나기", onClick = {
+            stopSleepTracking(context)
+        })
         Spacer(modifier = Modifier.height(10.dp))
 
-        NormalButton(text = "측정 중단하기", onClick = {})
+        NormalButton(text = "측정 중단하기", onClick = {
+            stopSleepTracking(context)
+        })
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
@@ -98,9 +109,16 @@ fun SleepIngScreen() {
     }
 }
 
+private fun stopSleepTracking(context: Context) {
+    val intent = Intent(context, RecordService::class.java)
+    intent.action = RecordService.ACTION_STOP_SERVICE
+    context.startService(intent)
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun SleepIngScreenPreview() {
-    SleepIngScreen()
+    val navController = rememberNavController()
+    SleepIngScreen(navController)
 }
