@@ -2,17 +2,11 @@ package com.example.breathapplication.gemini.chat
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.FocusInteraction
-import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +15,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -39,33 +32,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.breathapplication.R
 import com.example.breathapplication.component.TobBar
-import com.example.breathapplication.gemini.chat.data.ChatData
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale4
 import com.example.breathapplication.ui.theme.Greyscale6
 import com.example.breathapplication.ui.theme.Greyscale8
 import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Typography2
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
@@ -186,19 +168,20 @@ private fun ChatTextField(
             maxLines = 1,
             interactionSource = interactionSource
         )
+        val isEnabled = value.isNotBlank()
 
         Box(
             modifier = Modifier
                 .size(73.dp, 52.dp)
                 .clip(RoundedCornerShape(0.dp, 6.dp, 6.dp, 0.dp))
-                .background(Primary1)
-                .clickable {
+                .background(if (isEnabled) Primary1 else Greyscale8)
+                .clickable(enabled = isEnabled) {
                     onSendClickListener(value)
                     onValueChange("")
-                }
+                },
+            contentAlignment = Alignment.Center
         ) {
             Text(
-                modifier = Modifier.align(Alignment.Center),
                 text = "전송",
                 style = Typography2.button,
                 color = Color.White,
@@ -208,6 +191,7 @@ private fun ChatTextField(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableInteractionSource")
 @Preview(showBackground = true)
 @Composable
@@ -218,12 +202,6 @@ fun ChatTextFieldPreview() {
             .padding(12.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        ChatTextField(
-            modifier = Modifier.fillMaxWidth(),
-            onSendClickListener = {},
-            value = "",
-            onValueChange = {},
-            interactionSource = MutableInteractionSource(),
-        )
+        ChatScreen(viewModel = ChatViewModel())
     }
 }

@@ -1,5 +1,6 @@
 package com.example.breathapplication.screen.main.main_component
 
+import android.content.DialogInterface.OnClickListener
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -39,7 +40,8 @@ import com.example.breathapplication.ui.theme.Typography2
 /** AI 기반의 챗봇을 보여주는 컴포저블 */
 @Composable
 fun ChatBotBox(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickListener: () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -124,7 +126,7 @@ fun ChatBotBox(
                             .width(78.dp)
                             .background(Primary1)
                             .clickable {
-                                //TODO : 눌렀을 때 수면 상담 스크린 연결하기
+                                onClickListener()
                             }
                     ) {
                         Text(
