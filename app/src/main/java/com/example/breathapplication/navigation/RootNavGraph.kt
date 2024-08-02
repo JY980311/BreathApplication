@@ -92,17 +92,5 @@ fun RootNavGraph(navController: NavHostController) {
         composable(SleepNavItem.SleepIng.route) {
             SleepIngScreen(navController = navController)
         }
-
-        /** BottomNavigationBar */
-        composable(BottomNavItem.SleepScreen.route) {
-            SleepScreen(diaryScreenViewModel = diaryScreenViewModel, navController = navController, asleepViewModel)
-        }
-        composable(BottomNavItem.WriteDiary.route) {
-            WriteDiaryScreen(navController = navController, diaryScreenViewModel = diaryScreenViewModel)
-        }
-        composable(BottomNavItem.MainScreen.route) {
-            MainScreen(viewModel = viewModel(), diaryScreenViewModel = diaryScreenViewModel, navController = navController)
-        }
     }
-
 }
