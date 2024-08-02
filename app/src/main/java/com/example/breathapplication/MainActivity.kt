@@ -1,5 +1,8 @@
 package com.example.breathapplication
 
+import BottomNavigationBar
+import ai.asleep.asleepsdk.Asleep.Companion.initAsleepConfig
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,8 +12,11 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -30,9 +36,9 @@ import com.example.breathapplication.asleep.screen.TrackingScreen
 import com.example.breathapplication.asleep.service.RecordService
 import com.example.breathapplication.asleep.viewmodel.AsleepViewModel
 import com.example.breathapplication.navigation.RootNavGraph
-import com.example.breathapplication.navigation.bottomnavigation.BottomNavigationBar
 import com.example.breathapplication.ui.theme.BreathApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -48,54 +54,59 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge() /** 상단바 투명 설정(안보이게 하기) */
 
         setContent {
-            val navController = rememberNavController()
-            val context = LocalContext.current
-            val isRunningService = remember { mutableStateOf(false) }
+            MainViewWrapper(asleepViewModel = asleepViewModel)
+        }
+    }
+}
 
-            if (savedInstanceState == null) {
-                LaunchedEffect(Unit) {
-                    isRunningService.value = RecordService.isRecordServiceRunning(context)
-                    if (!isRunningService.value) {
-                        initAsleepConfig()
-                        navController.navigate("main") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    } else {
-                        navController.navigate("sleep") {
-                            popUpTo(navController.graph.startDestinationId) {
-                                inclusive = true
-                            }
-                        }
-                    }
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun MainViewWrapper(asleepViewModel: AsleepViewModel) {
+    val navController = rememberNavController()
+    val context = LocalContext.current
+    val isRunningService = remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isRunningService.value = RecordService.isRecordServiceRunning(context)
+        if (!isRunningService.value) {
+            initAsleepConfig(asleepViewModel)
+            navController.navigate("main") {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
                 }
             }
-
-            BreathApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    RootNavGraph(navController = navController)
+        } else {
+            navController.navigate("sleep") {
+                popUpTo(navController.graph.startDestinationId) {
+                    inclusive = true
                 }
             }
         }
     }
 
-    private fun initAsleepConfig() {
-        val storedUserId = SampleApplication.sharedPref.getString("user_id", null)
-        asleepViewModel.initAsleepConfig(storedUserId)
+    BreathApplicationTheme {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            MainView(navController = navController)
+        }
     }
-
 }
+
+private fun initAsleepConfig(asleepViewModel: AsleepViewModel) {
+    val storedUserId = SampleApplication.sharedPref.getString("user_id", null)
+    asleepViewModel.initAsleepConfig(storedUserId)
+}
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TestApp(){
     val navController = rememberNavController()
     RootNavGraph(navController = navController)
 }
+
 
 @Composable
 fun MyAppNavHost(navController: NavHostController) {
@@ -105,19 +116,20 @@ fun MyAppNavHost(navController: NavHostController) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun MainView() {
-    val navcontroller = rememberNavController()
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun MainView(
+    navController: NavHostController
+) {
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navcontroller = navcontroller)
+            BottomNavigationBar(navController = navController)
         }
     ) {
-        Box(modifier = Modifier.padding(it)) {
-            RootNavGraph(navController = navcontroller)
+        Box(modifier = Modifier.fillMaxSize()) {
+            RootNavGraph(navController = navController)
         }
     }
 }
