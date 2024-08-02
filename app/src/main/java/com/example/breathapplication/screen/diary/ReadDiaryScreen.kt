@@ -32,7 +32,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
 import com.example.breathapplication.calendar.ui.CalendarScreen
 import com.example.breathapplication.component.CompleteButton
-import com.example.breathapplication.component.MyMoodTag
 import com.example.breathapplication.component.MySleepTag
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.component.TobBar
@@ -45,6 +44,7 @@ import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : DiaryScreenViewModel) {
+    diaryScreenViewModel.isComplete.value = false
     Column(
         Modifier
             .background(color = Greyscale11)
@@ -54,7 +54,7 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
     {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            CalendarScreen(diaryScreenViewModel)
         }
         LazyColumn(
             modifier = Modifier
@@ -93,7 +93,9 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
                     })
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    NormalButton(text = "일기 수정하기", onClick = {})
+                    NormalButton(text = "일기 수정하기", onClick = {
+                        navController.popBackStack()
+                    })
                 }
             }
         }
@@ -101,13 +103,15 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
 }
 
 @Composable
-fun MyMoodTag(tags: List<String>) {
+fun MyMoodTag(tags: String) {
+//    val tagList by tags.collectAsState(initial = emptyList())
     Row(
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        tags.forEach { tag ->
-            MyMoodTag(tag)
-        }
+//        tagList.forEach { tag ->
+//            MyMoodTag(tag)
+//        }
+       com.example.breathapplication.component.MyMoodTag(tags)
     }
 }
 

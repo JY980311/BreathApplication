@@ -1,5 +1,6 @@
 package com.example.breathapplication.screen.diary
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -45,6 +46,8 @@ import com.example.breathapplication.component.MoodTag
 import com.example.breathapplication.component.NormalButton
 import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.navigation.diary.DiaryNavItem
+import com.example.breathapplication.navigation.sleep.SleepNavItem
+import com.example.breathapplication.network.test.TestViewModel
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
@@ -52,11 +55,11 @@ import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel) {
-    diaryScreenViewModel.setSelectedDate("")
-
+fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel, test:TestViewModel = viewModel()){
+    diaryScreenViewModel.isComplete.value = false
     Column(
         Modifier
             .background(color = Greyscale11)
@@ -67,7 +70,7 @@ fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: Dia
     {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            CalendarScreen(diaryScreenViewModel)
         }
         LazyColumn(
             modifier = Modifier
@@ -187,6 +190,7 @@ fun CompleteDialog1(diaryScreenViewModel: DiaryScreenViewModel, navController : 
                 Spacer(modifier = Modifier.height(40.dp))
 
                 NormalButton("일기 먼저 볼래요", onClick = {
+
                     navController.navigate(
                         DiaryNavItem.ReadDiaryScreen.route)
                     diaryScreenViewModel.writeShowDialog = false
@@ -194,7 +198,10 @@ fun CompleteDialog1(diaryScreenViewModel: DiaryScreenViewModel, navController : 
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                CompleteButton("수면 측정 하러가기", onClick = { diaryScreenViewModel.writeShowDialog = false })
+                CompleteButton("수면 측정 하러가기", onClick = {
+                    navController.navigate(SleepNavItem.Sleep.route)
+                    diaryScreenViewModel.writeShowDialog = false
+                })
 
             }
         }

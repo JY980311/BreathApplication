@@ -1,5 +1,6 @@
 package com.example.breathapplication.screen.diary
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -17,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,9 +36,13 @@ import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Typography2
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyDiaryScreen(diaryScreenViewModel: DiaryScreenViewModel){
+    val readDiaryText by diaryScreenViewModel.readDiaryText.collectAsState()
+    val readMoodTag by diaryScreenViewModel.readMoodTag.collectAsState()
+    val readSleepTag by diaryScreenViewModel.readSleepTag.collectAsState()
     Column(
         Modifier
             .background(color = Greyscale11)
@@ -91,7 +98,8 @@ fun MyDiaryScreen(diaryScreenViewModel: DiaryScreenViewModel){
             contentAlignment = Alignment.TopStart
         ) {
             Text(
-                text = diaryScreenViewModel.readDiaryText.value,
+//                text = diaryScreenViewModel.readDiaryText.value,
+                text = readDiaryText,
                 style = Typography2.bodyText,
                 color = Greyscale4,
             )
@@ -111,7 +119,7 @@ fun MyDiaryScreen(diaryScreenViewModel: DiaryScreenViewModel){
             verticalAlignment = Alignment.CenterVertically
 
         ){
-            MyMoodTag(diaryScreenViewModel.readSleepTag)
+            MyMoodTag(readSleepTag)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "했고",
@@ -135,7 +143,7 @@ fun MyDiaryScreen(diaryScreenViewModel: DiaryScreenViewModel){
             verticalAlignment = Alignment.CenterVertically
 
         ){
-            MySleepTag(diaryScreenViewModel.readMoodTag.value)
+            MySleepTag(readMoodTag)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "기분이었어요.",
