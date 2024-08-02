@@ -9,6 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.breathapplication.navigation.diary.DiaryNavItem
 import com.example.breathapplication.navigation.setting.SettingNavItem
+import com.example.breathapplication.navigation.sleep.SleepNavItem
 import com.example.breathapplication.screen.diary.CompleteDiaryScreen
 import com.example.breathapplication.screen.diary.ContinueDiaryScreen
 import com.example.breathapplication.screen.diary.ReadDiaryScreen
@@ -19,6 +20,8 @@ import com.example.breathapplication.screen.setting.Pick
 import com.example.breathapplication.screen.setting.Profile
 import com.example.breathapplication.screen.setting.Push
 import com.example.breathapplication.screen.setting.Setting
+import com.example.breathapplication.screen.sleep.SleepIngScreen
+import com.example.breathapplication.screen.sleep.SleepScreen
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -60,6 +63,14 @@ fun RootNavGraph(navController: NavHostController) {
         }
         composable(SettingNavItem.Help.route) {
             Help(navController)
+        }
+
+        /** Sleep */
+        composable(SleepNavItem.Sleep.route) {
+            SleepScreen(diaryScreenViewModel = diaryScreenViewModel, navController = navController)
+        }
+        composable(SleepNavItem.SleepIng.route) {
+            SleepIngScreen()
         }
     }
 
