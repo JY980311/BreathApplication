@@ -45,7 +45,7 @@ fun ChatBotBox(
 ) {
     Box(
         modifier = modifier
-            .height(200.dp)
+            .height(180.dp)
             .clip(RoundedCornerShape(12.dp))
             .background(Greyscale10)
     ) {
