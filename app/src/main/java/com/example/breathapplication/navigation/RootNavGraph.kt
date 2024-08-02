@@ -9,6 +9,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.breathapplication.asleep.viewmodel.AsleepViewModel
+import com.example.breathapplication.gemini.chat.ChatScreen
+import com.example.breathapplication.gemini.chat.ChatViewModel
 import com.example.breathapplication.navigation.diary.DiaryNavItem
 import com.example.breathapplication.navigation.setting.SettingNavItem
 import com.example.breathapplication.navigation.sleep.SleepNavItem
@@ -40,6 +42,11 @@ fun RootNavGraph(navController: NavHostController) {
         /** Main */
         composable("main"){
             MainScreen(viewModel = mainScreenViewModel, diaryScreenViewModel = diaryScreenViewModel, navController = navController)
+        }
+
+        /** Chat */
+        composable("chat"){
+             ChatScreen(viewModel = ChatViewModel(), navController)
         }
 
         /** Diary */

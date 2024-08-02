@@ -40,9 +40,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
 import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale4
 import com.example.breathapplication.ui.theme.Greyscale6
 import com.example.breathapplication.ui.theme.Greyscale8
@@ -59,7 +62,8 @@ import kotlinx.coroutines.launch
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
-    viewModel: ChatViewModel
+    viewModel: ChatViewModel,
+    navController : NavHostController
 ) {
     val conversation by viewModel.conversation.collectAsStateWithLifecycle()
     val textField by viewModel.textValue.collectAsStateWithLifecycle()
@@ -73,10 +77,11 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = Greyscale11)
             .imePadding()
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
-        TobBar(title = "수면 상담", leftIcon = R.drawable.ic_arrow)
+        TobBar(title = "수면 상담", leftIcon = R.drawable.ic_arrow, navController = navController)
 
         LazyColumn(
             modifier = Modifier
@@ -196,12 +201,13 @@ private fun ChatTextField(
 @Preview(showBackground = true)
 @Composable
 fun ChatTextFieldPreview() {
+    val navController = rememberNavController()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(12.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        ChatScreen(viewModel = ChatViewModel())
+        ChatScreen(viewModel = ChatViewModel(), navController)
     }
 }

@@ -312,7 +312,10 @@ fun MainScreen(
                 )
 
                 ChatBotBox(
-                    modifier = Modifier.padding(top = 36.dp, bottom = 14.dp)
+                    modifier = Modifier.padding(top = 36.dp, bottom = 14.dp),
+                    onClickListener = {
+                        navController.navigate("chat")
+                    }
                 )
 
                 Text(

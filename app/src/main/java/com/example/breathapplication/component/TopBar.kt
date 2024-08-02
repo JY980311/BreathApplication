@@ -46,6 +46,9 @@ fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null, navCo
                             if (leftIcon == R.drawable.ic_calendar && diaryScreenViewModel != null) {
                                 diaryScreenViewModel.isCalendarClicked.value = !diaryScreenViewModel.isCalendarClicked.value
                             }
+                            if(leftIcon == R.drawable.ic_arrow && navController != null){
+                                navController.popBackStack()
+                            }
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Start,
