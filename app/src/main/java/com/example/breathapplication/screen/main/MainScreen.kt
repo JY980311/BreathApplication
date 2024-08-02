@@ -142,6 +142,7 @@ fun MainScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(color = Greyscale11)
+            .padding(bottom = 90.dp)
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
