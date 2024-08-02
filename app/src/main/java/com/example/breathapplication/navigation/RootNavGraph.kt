@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.breathapplication.asleep.viewmodel.AsleepViewModel
+import com.example.breathapplication.navigation.bottomnavigation.BottomNavItem
 import com.example.breathapplication.gemini.chat.ChatScreen
 import com.example.breathapplication.gemini.chat.ChatViewModel
 import com.example.breathapplication.navigation.diary.DiaryNavItem
@@ -16,6 +17,7 @@ import com.example.breathapplication.navigation.setting.SettingNavItem
 import com.example.breathapplication.navigation.sleep.SleepNavItem
 import com.example.breathapplication.screen.diary.CompleteDiaryScreen
 import com.example.breathapplication.screen.diary.ContinueDiaryScreen
+import com.example.breathapplication.screen.diary.MyDiaryScreen
 import com.example.breathapplication.screen.diary.ReadDiaryScreen
 import com.example.breathapplication.screen.diary.WriteDiaryScreen
 import com.example.breathapplication.screen.main.MainScreen
@@ -38,7 +40,7 @@ fun RootNavGraph(navController: NavHostController) {
     val mainScreenViewModel : MainScreenViewModel = viewModel()
 
     NavHost(navController = navController, startDestination = "main") {
-        
+
         /** Main */
         composable("main"){
             MainScreen(viewModel = mainScreenViewModel, diaryScreenViewModel = diaryScreenViewModel, navController = navController)
@@ -89,6 +91,17 @@ fun RootNavGraph(navController: NavHostController) {
         }
         composable(SleepNavItem.SleepIng.route) {
             SleepIngScreen(navController = navController)
+        }
+
+        /** BottomNavigationBar */
+        composable(BottomNavItem.SleepScreen.route) {
+            SleepScreen(diaryScreenViewModel = diaryScreenViewModel, navController = navController, asleepViewModel)
+        }
+        composable(BottomNavItem.WriteDiary.route) {
+            WriteDiaryScreen(navController = navController, diaryScreenViewModel = diaryScreenViewModel)
+        }
+        composable(BottomNavItem.MainScreen.route) {
+            MainScreen(viewModel = viewModel(), diaryScreenViewModel = diaryScreenViewModel, navController = navController)
         }
     }
 
