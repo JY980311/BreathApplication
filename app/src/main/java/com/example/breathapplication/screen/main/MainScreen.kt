@@ -176,7 +176,9 @@ fun MainScreen(
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            CalendarScreen(
+                diaryScreenViewModel = diaryScreenViewModel
+            )
         }
 
         Column(
