@@ -1,7 +1,9 @@
 package com.example.breathapplication.gemini.chat
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -72,6 +74,7 @@ import kotlinx.coroutines.launch
  * 2. 텍스트 필드에 입력한 텍스트가 없을 때 전송 버튼을 누르면 아무런 반응이 없어야 한다.
  * */
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
     viewModel: ChatViewModel

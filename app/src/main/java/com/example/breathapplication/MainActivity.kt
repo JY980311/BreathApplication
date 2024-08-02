@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     isRunningService.value = RecordService.isRecordServiceRunning(context)
                     if (!isRunningService.value) {
                         initAsleepConfig()
-                        navController.navigate("write_diary_screen") {
+                        navController.navigate("main") {
                             popUpTo(navController.graph.startDestinationId) {
                                 inclusive = true
                             }

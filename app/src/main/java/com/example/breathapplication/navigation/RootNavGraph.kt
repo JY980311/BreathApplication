@@ -16,6 +16,7 @@ import com.example.breathapplication.screen.diary.CompleteDiaryScreen
 import com.example.breathapplication.screen.diary.ContinueDiaryScreen
 import com.example.breathapplication.screen.diary.ReadDiaryScreen
 import com.example.breathapplication.screen.diary.WriteDiaryScreen
+import com.example.breathapplication.screen.main.MainScreen
 import com.example.breathapplication.screen.setting.Help
 import com.example.breathapplication.screen.setting.Password
 import com.example.breathapplication.screen.setting.Pick
@@ -25,14 +26,21 @@ import com.example.breathapplication.screen.setting.Setting
 import com.example.breathapplication.screen.sleep.SleepIngScreen
 import com.example.breathapplication.screen.sleep.SleepScreen
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
+import com.example.breathapplication.viewmodel.MainScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RootNavGraph(navController: NavHostController) {
     val diaryScreenViewModel : DiaryScreenViewModel = viewModel()
     val asleepViewModel : AsleepViewModel = hiltViewModel()
+    val mainScreenViewModel : MainScreenViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = DiaryNavItem.WriteDiaryScreen.route) {
+    NavHost(navController = navController, startDestination = "main") {
+        
+        /** Main */
+        composable("main"){
+            MainScreen(viewModel = mainScreenViewModel, diaryScreenViewModel = diaryScreenViewModel, navController = navController)
+        }
 
         /** Diary */
         composable(DiaryNavItem.WriteDiaryScreen.route){

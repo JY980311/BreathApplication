@@ -1,15 +1,11 @@
 package com.example.breathapplication.screen.main
 
+import android.annotation.SuppressLint
 import android.os.Build
-import android.text.style.TtsSpan.TextBuilder
 import android.util.Log
-import android.widget.GridLayout
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,14 +18,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -38,28 +31,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.breathapplication.R
@@ -68,7 +46,6 @@ import com.example.breathapplication.component.TobBar
 import com.example.breathapplication.component.sleepgraph.SleepGraph
 import com.example.breathapplication.component.sleepgraph.SnoringGraph
 import com.example.breathapplication.network.model.asleep.AsleepData
-import com.example.breathapplication.network.test.TestViewModel
 import com.example.breathapplication.screen.main.main_component.ChatBotBox
 import com.example.breathapplication.screen.main.main_component.ImageBox
 import com.example.breathapplication.screen.main.main_component.SleepInfoBox
@@ -77,26 +54,18 @@ import com.example.breathapplication.screen.main.main_component.SleepTimeIcon
 import com.example.breathapplication.screen.main.main_component.SleepVerticalGraph
 import com.example.breathapplication.screen.main.main_component.WakeTimeIcon
 import com.example.breathapplication.screen.main.main_component.Wave
-import com.example.breathapplication.ui.theme.Greyscale1
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.ui.theme.Greyscale11
 import com.example.breathapplication.ui.theme.Greyscale2
-import com.example.breathapplication.ui.theme.Greyscale3
-import com.example.breathapplication.ui.theme.Greyscale4
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Greyscale6
-import com.example.breathapplication.ui.theme.Greyscale7
 import com.example.breathapplication.ui.theme.Greyscale8
-import com.example.breathapplication.ui.theme.Greyscale9
-import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Primary2
-import com.example.breathapplication.ui.theme.Secondary1
 import com.example.breathapplication.ui.theme.Typography2
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 import com.example.breathapplication.viewmodel.MainScreenViewModel
-import okhttp3.internal.wait
-import kotlin.math.roundToInt
-import kotlin.math.sin
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreen(
@@ -172,11 +141,28 @@ fun MainScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = Greyscale11)
             .windowInsetsPadding(WindowInsets.safeDrawing)
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            CalendarScreen(diaryScreenViewModel)
+        }
+        if(diaryScreenViewModel.selectedDate.value != "2024-07-21"){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Text(
+                    text = "수면 데이터가 없습니다.",
+                    style = Typography2.subHead ,
+                    color = Greyscale5,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
         }
 
         Column(

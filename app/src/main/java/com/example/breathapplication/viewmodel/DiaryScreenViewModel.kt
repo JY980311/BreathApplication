@@ -29,7 +29,7 @@ class DiaryScreenViewModel : ViewModel() {
     var isDiary = mutableStateOf(false)
 
     /** Write Screen */
-    private val _selectedDate = MutableStateFlow(LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+    private val _selectedDate = MutableStateFlow("2024-07-21")
     val selectedDate: StateFlow<String> get() = _selectedDate
 
     private val _TopbarDate = mutableStateOf(formatDateToShortDay(_selectedDate.value))
