@@ -172,7 +172,7 @@ fun MainScreen(
                 .padding(20.dp)
         ) {
             Text(
-                text = "7월 21일 나의 수면 Test 버전",
+                text = "7월 21일 나의 수면 prototype 버전",
                 style = Typography2.h1,
                 color = Greyscale2
             )
