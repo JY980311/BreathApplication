@@ -3,14 +3,10 @@ package com.example.breathapplication.calendar.ui
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,23 +19,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.breathapplication.calendar.state.Date
 import com.example.breathapplication.calendar.viewmodel.CalendarViewModel
-import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale5
 import com.example.breathapplication.ui.theme.Greyscale6
 import com.example.breathapplication.ui.theme.Primary1
 import com.example.breathapplication.ui.theme.Primary2
 import com.example.breathapplication.ui.theme.Typography2
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Content(
-    viewModel: CalendarViewModel
+    viewModel: CalendarViewModel,
+    diaryScreenViewModel: DiaryScreenViewModel
 ) {
     val date by viewModel.calendarState.collectAsStateWithLifecycle()
     val today = LocalDate.now()
@@ -63,6 +59,13 @@ fun Content(
                     dateItem == selectedDate
                 ) {
                     selectedDate = dateItem
+
+                    val selectedDateString = selectedDate?.toFormattedString() ?: "None"
+                    diaryScreenViewModel.setSelectedDate(selectedDateString)
+                    if(diaryScreenViewModel.isComplete.value){
+                        diaryScreenViewModel.getPostById()
+                    }
+
                     Log.d("Content", "Selected date: $selectedDate")
                 }
             }
