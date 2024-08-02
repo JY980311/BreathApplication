@@ -8,8 +8,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +30,7 @@ import com.example.breathapplication.asleep.screen.TrackingScreen
 import com.example.breathapplication.asleep.service.RecordService
 import com.example.breathapplication.asleep.viewmodel.AsleepViewModel
 import com.example.breathapplication.navigation.RootNavGraph
+import com.example.breathapplication.navigation.bottomnavigation.BottomNavigationBar
 import com.example.breathapplication.ui.theme.BreathApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -97,5 +102,22 @@ fun MyAppNavHost(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "home") {
         composable("home") { HomeContent(navController = navController) }
         composable("tracking") { TrackingScreen(navController = navController) }
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun MainView() {
+    val navcontroller = rememberNavController()
+
+    Scaffold(
+        bottomBar = {
+            BottomNavigationBar(navcontroller = navcontroller)
+        }
+    ) {
+        Box(modifier = Modifier.padding(it)) {
+            RootNavGraph(navController = navcontroller)
+        }
     }
 }

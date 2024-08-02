@@ -89,11 +89,13 @@ fun SleepIngScreen(navController: NavHostController) {
 
         CompleteButton(text = "일어나기", onClick = {
             stopSleepTracking(context)
+            navController.navigate("main")
         })
         Spacer(modifier = Modifier.height(10.dp))
 
         NormalButton(text = "측정 중단하기", onClick = {
             stopSleepTracking(context)
+            navController.navigate("main")
         })
         Spacer(modifier = Modifier.height(16.dp))
 
