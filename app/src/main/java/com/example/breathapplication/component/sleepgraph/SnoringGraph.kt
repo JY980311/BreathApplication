@@ -20,9 +20,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.breathapplication.component.sleepgraph.data.SleepStageData
-import com.example.breathapplication.component.sleepgraph.item.SleepChartItem
-import com.example.breathapplication.component.sleepgraph.item.SleepStageType
+import com.example.breathapplication.component.sleepgraph.data.SnoringStageData
+import com.example.breathapplication.component.sleepgraph.item.SnoringChartItem
+import com.example.breathapplication.component.sleepgraph.item.SnoringStageType
 import com.example.breathapplication.ui.theme.Greyscale10
 import com.example.breathapplication.ui.theme.Greyscale2
 import com.example.breathapplication.ui.theme.Greyscale5
@@ -31,21 +31,19 @@ import com.example.breathapplication.viewmodel.MainScreenViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun SleepGraph(
+fun SnoringGraph(
     viewModel: MainScreenViewModel
 ) {
     val sleepStages = viewModel.asleepData.collectAsStateWithLifecycle() // 데이터 구독하는 부분
 
-    val stages = sleepStages.value.result.session.sleep_stages.mapIndexed { index, stage ->
+    val stages = sleepStages.value.result.session.snoring_stages.mapIndexed { index, stage ->
         val stageType = when (stage) {
-            -1 -> SleepStageType.ERROR
-            0 -> SleepStageType.AWAKE
-            1 -> SleepStageType.LIGHT
-            2 -> SleepStageType.DEEP
-            3 -> SleepStageType.REM
-            else -> SleepStageType.ERROR
+            -1 -> SnoringStageType.ERROR
+            0 -> SnoringStageType.NONE
+            1 -> SnoringStageType.SNORING
+            else -> SnoringStageType.ERROR
         }
-        SleepStageData(startTime = index * 0.0083f, duration = 0.0083f, stage = stageType) // 30초 단위로 설정
+        SnoringStageData(startTime = index * 0.0083f, duration = 0.0083f, stage = stageType) // 30초 단위로 설정
     }
 
     Log.d("sleepStages", sleepStages.value.result.session.sleep_stages.toString())
@@ -60,7 +58,7 @@ fun SleepGraph(
         Column {
             Text(
                 modifier = Modifier.padding(start = 18.dp, top = 16.dp),
-                text = "수면 단계",
+                text = "코골이 단계",
                 style = Typography2.subTitle,
                 color = Greyscale2
             )
@@ -71,26 +69,16 @@ fun SleepGraph(
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(start = 18.dp, bottom = 22.dp, top = 22.dp),
+                        .padding(start = 18.dp, bottom = 30.dp, top = 40.dp),
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
-                        text = "비수면",
+                        text = "코골이",
                         style = Typography2.body4,
                         color = Greyscale5
                     )
                     Text(
-                        text = "얕은잠",
-                        style = Typography2.body4,
-                        color = Greyscale5
-                    )
-                    Text(
-                        text = "깊은잠",
-                        style = Typography2.body4,
-                        color = Greyscale5
-                    )
-                    Text(
-                        text = "렘수면",
+                        text = "안코골",
                         style = Typography2.body4,
                         color = Greyscale5
                     )
@@ -118,24 +106,13 @@ fun SleepGraph(
 
                 // hourPart를 SleepChartItem에 전달
                 if (hourPart != null) {
-                    SleepChartItem(
+                    SnoringChartItem(
+                        modifier = Modifier.fillMaxSize().padding(start = 18.dp, end = 18.dp, bottom = 18.dp, top = 18.dp),
                         stages = stages,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 18.dp)
-                            .padding(end = 18.dp, start = 16.dp),
                         time = hourPart
                     )
                 } else {
                     // hourPart가 null인 경우 적절한 조치
-                    SleepChartItem(
-                        stages = stages,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(vertical = 18.dp)
-                            .padding(end = 18.dp, start = 16.dp),
-                        time = 0
-                    )
                 }
             }
         }
@@ -148,9 +125,9 @@ fun main() {
     println(timePart) // 출력: 17
 }
 
-
 @Preview(showBackground = true)
 @Composable
-fun SleepGraphPreview() {
-    SleepGraph(viewModel = MainScreenViewModel())
+fun PreviewSnoringGraph() {
+    SnoringGraph(viewModel = MainScreenViewModel())
 }
+

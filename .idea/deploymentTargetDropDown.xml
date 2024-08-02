@@ -2,6 +2,21 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="ContentPreview">
+        <State />
+      </entry>
+      <entry key="DefaultHandler2Preview">
+        <State />
+      </entry>
+      <entry key="PreviewSnoringGraph">
+        <State />
+      </entry>
+      <entry key="SleepGraphPreview">
+        <State />
+      </entry>
+      <entry key="SnoringChartItemPreview">
+        <State />
+      </entry>
       <entry key="app">
         <State />
       </entry>

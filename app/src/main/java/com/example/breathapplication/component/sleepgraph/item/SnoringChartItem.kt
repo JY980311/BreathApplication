@@ -1,4 +1,4 @@
-package com.example.breathapplication.component.sleepgraph
+package com.example.breathapplication.component.sleepgraph.item
 
 import android.graphics.Typeface
 import androidx.compose.foundation.Canvas
@@ -7,37 +7,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
-import com.example.breathapplication.ui.theme.Greyscale6
-import com.example.breathapplication.ui.theme.Primary1
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.breathapplication.component.sleepgraph.data.SnoringStageData
 import com.example.breathapplication.ui.theme.Secondary1
-enum class SleepStageType {
-    AWAKE, LIGHT, DEEP, REM, ERROR
+enum class SnoringStageType {
+    NONE, SNORING, ERROR
 }
 
 @Composable
-fun SleepChartItem(
+fun SnoringChartItem(
     modifier: Modifier = Modifier,
-    stages: List<SleepStageData>,
+    stages: List<SnoringStageData>,
     time: Int
 ) {
     val colors = mapOf(
-        SleepStageType.AWAKE to Color(0xFF8BAAF8),
-        SleepStageType.REM to Secondary1,
-        SleepStageType.LIGHT to Primary1,
-        SleepStageType.DEEP to Color(0xFF6746E9),
-        SleepStageType.ERROR to Color.Red
+        SnoringStageType.SNORING to Color(0xFF8BAAF8),
+        SnoringStageType.NONE to Secondary1,
+        SnoringStageType.ERROR to Color.Red
     )
 
     val stagePositions = mapOf(
-        SleepStageType.AWAKE to 0.1f,
-        SleepStageType.REM to 0.3f,
-        SleepStageType.LIGHT to 0.5f,
-        SleepStageType.DEEP to 0.7f,
+        SnoringStageType.SNORING to 0.3f,
+        SnoringStageType.NONE to 0.6f,
+        SnoringStageType.ERROR to 0.9f,
     )
 
     Canvas(modifier = modifier) {
@@ -55,11 +51,9 @@ fun SleepChartItem(
             val left = stage.startTime * unitWidth
             val right = left + stage.duration * unitWidth
             val top = when (stage.stage) {
-                SleepStageType.AWAKE -> 0.1f * height
-                SleepStageType.REM -> 0.3f * height
-                SleepStageType.LIGHT -> 0.5f * height
-                SleepStageType.DEEP -> 0.7f * height
-                SleepStageType.ERROR -> 0.9f * height
+                SnoringStageType.SNORING -> 0.3f * height
+                SnoringStageType.NONE -> 0.6f * height
+                SnoringStageType.ERROR -> 0.9f * height
             }
 
             val bottom = top + 0.2f * height
@@ -72,40 +66,6 @@ fun SleepChartItem(
             )
         }
 
-        /*drawLine(
-            color = Color(0xFF26282D),
-            start = Offset(height - 325, 31f),
-            end = Offset(width, 31f),
-            strokeWidth = 1f
-        )
-
-        drawLine(
-            color = Color(0xFF26282D),
-            start = Offset(height - 325, 97f),
-            end = Offset(width, 97f),
-            strokeWidth = 1f
-        )
-
-        drawLine(
-            color = Color(0xFF26282D),
-            start = Offset(height - 325, 163f),
-            end = Offset(width, 163f),
-            strokeWidth = 1f
-        )
-
-        drawLine(
-            color = Color(0xFF26282D),
-            start = Offset(height - 325, 228f),
-            end = Offset(width, 228f),
-            strokeWidth = 1f
-        )
-
-        drawLine(
-            color = Color(0xFF26282D),
-            start = Offset(height - 325, 293f),
-            end = Offset(width, 293f),
-            strokeWidth = 1f
-        )*/
 
         stagePositions.values.forEach { topPosition ->
             val yPos = topPosition * height
@@ -135,17 +95,55 @@ fun SleepChartItem(
                     PathEffect.cornerPathEffect(2f)
                 )
             )
+
+            val hours = time + (i * 3)
+            val timeText = "${hours}시"
+            drawContext.canvas.nativeCanvas.drawText(
+                timeText,
+                x + 15f,
+                height - 10f,  // 텍스트 위치 조정
+                android.graphics.Paint().apply {
+                    textSize = 30f
+                    color = Color.Gray.toArgb()
+                    typeface = Typeface.create("wantedsans_medium", Typeface.NORMAL)
+                }
+            )
         }
 
-        for (i in 0..(totalDuration / threeHourInterval).toInt()) {
+        /*for (i in 0..(totalDuration / threeHourInterval).toInt()) {
             val x = i * intervalWidth
             val hours = time + (i * 3) // 9시부터 시작한다고 가정
             val timeText = "${hours}시"
-            /*
+            *//*
             * drawText는 Canvas에서 텍스트를 그리기 위해 사용되는 안드로이드의 기본 Canvas 객체를 사용하는 방법임.
             * 우리가 사용하는 Text를 사용하지 못함. 그러다보니 drawText를 사용해야함
-            * */
-            drawContext.canvas.nativeCanvas.drawText(timeText, x + 15f, height - 10, android.graphics.Paint().apply{ textSize = 30f; color = Greyscale6.toArgb(); typeface = Typeface.create("wantedsans_medium", Typeface.NORMAL) })
-        }
+            * *//*
+            drawContext.canvas.nativeCanvas.drawText(timeText, x + 15f, height, android.graphics.Paint().apply{ textSize = 30f; color = Greyscale6.toArgb(); typeface = Typeface.create("wantedsans_medium", Typeface.NORMAL) })
+        }*/
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SnoringChartItemPreview() {
+    SnoringChartItem(
+        stages = listOf(
+ SnoringStageData(
+                startTime = 0f,
+                duration = 0.0083f,
+                stage = SnoringStageType.SNORING
+            ),
+            SnoringStageData(
+                startTime = 0.0083f,
+                duration = 0.0083f,
+                stage = SnoringStageType.NONE
+            ),
+            SnoringStageData(
+                startTime = 0.0166f,
+                duration = 0.0083f,
+                stage = SnoringStageType.ERROR
+            )
+        ),
+        time = 9
+    )
 }
