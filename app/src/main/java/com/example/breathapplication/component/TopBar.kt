@@ -3,6 +3,7 @@ package com.example.breathapplication.component
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -16,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -42,7 +44,10 @@ fun TobBar(title: String, leftIcon : Int? = null, rightIcon : Int? = null, navCo
                 Row(
                     modifier = Modifier
                         .padding(start = 8.dp)
-                        .clickable {
+                        .clickable(
+                            interactionSource = remember{ MutableInteractionSource() },
+                            indication = null
+                        ){
                             if (leftIcon == R.drawable.ic_calendar && diaryScreenViewModel != null) {
                                 diaryScreenViewModel.isCalendarClicked.value = !diaryScreenViewModel.isCalendarClicked.value
                             }
