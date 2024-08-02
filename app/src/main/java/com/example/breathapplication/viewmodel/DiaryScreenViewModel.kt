@@ -1,14 +1,22 @@
 package com.example.breathapplication.viewmodel
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.breathapplication.network.model.supabase.GetSupabaseData
+import com.example.breathapplication.network.model.supabase.PostSupabaseData
+import com.example.breathapplication.network.retrofit.RetrofitClient
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
@@ -16,20 +24,21 @@ import java.util.Locale
 
 @RequiresApi(Build.VERSION_CODES.O)
 class DiaryScreenViewModel : ViewModel() {
-
     var isCalendarClicked = mutableStateOf(false)
+    var isComplete = mutableStateOf(false)
+    var isDiary = mutableStateOf(false)
 
     /** Write Screen */
-    private val _selectedDate = mutableStateOf("")
-    val selectedDate: State<String> get() = _selectedDate
+    private val _selectedDate = MutableStateFlow(LocalDate.now().format(DateTimeFormatter.ISO_DATE))
+    val selectedDate: StateFlow<String> get() = _selectedDate
 
-    private val _TopbarDate = mutableStateOf("")
+    private val _TopbarDate = mutableStateOf(formatDateToShortDay(_selectedDate.value))
     val TopbarDate: State<String> get() = _TopbarDate
 
-    private val _subTitleDate = mutableStateOf("")
+    private val _subTitleDate = mutableStateOf(formatMonthDayWithDayOfWeek(_selectedDate.value))
     val subTitleDate: State<String> get() = _subTitleDate
 
-    private val _subHeadDate = mutableStateOf("")
+    private val _subHeadDate = mutableStateOf(formatDateToMonthDay(_selectedDate.value))
     val subHeadDate: State<String> get() = _subHeadDate
 
     private val _writeDiaryText = mutableStateOf("")
@@ -47,14 +56,14 @@ class DiaryScreenViewModel : ViewModel() {
     private val _name = mutableStateOf("홍길동")
     val name: State<String> get() = _name
 
-    private val _readDiaryText = mutableStateOf("")
-    val readDiaryText: State<String> get() = _readDiaryText
+    private val _readDiaryText = MutableStateFlow("")
+    val readDiaryText: StateFlow<String> get() = _readDiaryText
 
-    private val _readMoodTag = mutableStateOf("")
-    val readMoodTag: State<String> get() = _readMoodTag
+    private val _readMoodTag = MutableStateFlow("")
+    val readMoodTag: StateFlow<String> get() = _readMoodTag
 
-    private val _readSleepTag = mutableStateOf<List<String>>(emptyList())
-    val readSleepTag: List<String> get() = _readSleepTag.value
+    private val _readSleepTag = MutableStateFlow<String>("")
+    val readSleepTag: StateFlow<String> get() = _readSleepTag
 
     /** Continue Screen */
     var continueShowDialog by mutableStateOf(false)
@@ -69,14 +78,14 @@ class DiaryScreenViewModel : ViewModel() {
     private val _comment = mutableStateOf("")
     val comment: State<String> get() = _comment
 
-    private val _slideValue = mutableIntStateOf(0)
-    val slideValue: State<Int> get() = _slideValue
+    private val _slideValue = MutableStateFlow(1)
+    val slideValue: StateFlow<Int> get() = _slideValue
 
-    private val _completeSleepTag = mutableStateOf<String>("")
-    val completeSleepTag: State<String> get() = _completeSleepTag
+    private val _completeSleepTag = MutableStateFlow<String>("")
+    val completeSleepTag: StateFlow<String> get() = _completeSleepTag
 
-    private val _completeConditionTag = mutableStateOf<String>("")
-    val completeConditionTag: State<String> get() = _completeConditionTag
+    private val _completeConditionTag = MutableStateFlow<String>("")
+    val completeConditionTag: StateFlow<String> get() = _completeConditionTag
 
     fun setReadDiaryText() {
         _readDiaryText.value = _writeDiaryText.value
@@ -86,7 +95,7 @@ class DiaryScreenViewModel : ViewModel() {
         _readMoodTag.value = getSelectedMoodTag()
     }
 
-    fun setReadSleepTag(tag: List<String>) {
+    fun setReadSleepTag(tag: String) {
         _readSleepTag.value = tag
     }
 
@@ -95,8 +104,7 @@ class DiaryScreenViewModel : ViewModel() {
     }
 
     fun setSelectedDate(date: String){
-        _selectedDate.value = LocalDate.now().format(DateTimeFormatter.ISO_DATE) /** 실제로는 캘린더에서 선택한 날짜를 사용해야 함. */
-
+        _selectedDate.value = date
         _TopbarDate.value = formatDateToShortDay(_selectedDate.value)
         _subTitleDate.value = formatMonthDayWithDayOfWeek(_selectedDate.value)
         _subHeadDate.value = formatDateToMonthDay(_selectedDate.value)
@@ -180,16 +188,15 @@ class DiaryScreenViewModel : ViewModel() {
     }
 
     /** 수면 방해 버튼 중 선택한 버튼 반환 */
-    fun getSelectedDisturbTag(): List<String> {
-        return getSelectedIndices().map { index ->
-            when (index) {
+    fun getSelectedDisturbTag(): String {
+        val selectedIndex = getSelectedIndices().firstOrNull()
+        return when (selectedIndex) {
                 0 -> "과한 운동을"
                 1 -> "과음을"
                 2 -> "카페인 섭취를"
                 else -> ""
             }
         }
-    }
 
     /** 수면 방해 버튼 중 선택한 버튼 인덱스 반환*/
     fun getSelectedIndices(): List<Int> {
@@ -213,5 +220,145 @@ class DiaryScreenViewModel : ViewModel() {
             else -> ""
         }
     }
+
+    /** Supabase Post */
+    fun postApi(data: PostSupabaseData){
+
+        viewModelScope.launch {
+            val apiService = RetrofitClient.getSupabaseApiService()
+            try {
+                val apiResponse: Response<List<PostSupabaseData>> = apiService.createPost(
+                    postSupabaseData = data
+                )
+                Log.d("데이터 전송", "$apiResponse")
+                if(apiResponse.code() == 409){
+                    updatePost(data)
+                }
+            } catch (e: Exception) {
+                Log.d("PostViewModel", "error: $e")
+            }
+        }
+    }
+
+    fun postApiTest(){
+        val tag2 : Int
+        tag2 = when(_readMoodTag.value){
+            "행복한" -> 1
+            "편안한" -> 2
+            "내일이 기대되는" -> 3
+            "잠이 솔솔오는" -> 4
+            "그냥 그런" -> 5
+            "슬픈" -> 6
+            "지치는" -> 7
+            "걱정이 많은" -> 8
+            "불안한" -> 9
+            else -> 0
+        }
+
+        val numericString = selectedDate.value.replace("-", "")
+        val numericDate = numericString.toInt()
+
+        val tag3 : Int
+        tag3 = when(_continueConditionTag.value){
+            "개운했어요" -> 1
+            "피곤했어요" -> 2
+            else -> 0
+        }
+
+        val newData =  PostSupabaseData(
+            id = numericDate,
+            created_at = selectedDate.value,
+            content = _readDiaryText.value,
+            tag_1 = getSelectedIndices().first(),
+            tag_2 = tag2,
+            tag_3 = tag3,
+            graph = _slideValue.value
+        )
+
+        Log.d("데이터", "$newData")
+
+        postApi(newData)
+    }
+
+
+    fun getPostById() {
+        val numericString = selectedDate.value.replace("-", "")
+        val numericDate = numericString.toInt()
+
+        viewModelScope.launch {
+            val apiService = RetrofitClient.getSupabaseApiService()
+            try {
+                val apiResponse = apiService.getPostById(
+                    id = "eq.$numericDate"
+                )
+                Log.d("데이터 통신", "$apiResponse")
+
+                if(apiResponse.isNotEmpty()){
+                    isDiary.value = false
+                    _readDiaryText.value = apiResponse[0].content
+                    _readMoodTag.value = when(apiResponse[0].tag_2){
+                        1 -> "행복한"
+                        2 -> "편안한"
+                        3 -> "내일이 기대되는"
+                        4 -> "잠이 솔솔오는"
+                        5 -> "그냥 그런"
+                        6 -> "슬픈"
+                        7 -> "지치는"
+                        8 -> "걱정이 많은"
+                        9 -> "불안한"
+                        else -> ""
+                    }
+                    _readSleepTag.value = when (apiResponse[0].tag_1) {
+                        0 -> "과한 운동을"
+                        1 -> "과음을"
+                        2 -> "카페인 섭취를"
+                        else -> ""
+                    }
+                    _completeConditionTag.value = if(apiResponse[0].tag_3 == 1) "개운했어요" else "피곤했어요"
+                    _slideValue.value = apiResponse[0].graph
+                }
+                else{
+                    isDiary.value = true
+                }
+
+            } catch (e: Exception) {
+                Log.d("데이터 통신 에러", "error: $e")
+            }
+        }
+        getAllPostData()
+    }
+
+    fun getAllPostData() {
+        viewModelScope.launch {
+            val apiService = RetrofitClient.getSupabaseApiService()
+            try {
+                val apiResponse: List<GetSupabaseData> = apiService.getAllPost()
+                Log.d("데이터 조회", "$apiResponse")
+            } catch (e: Exception) {
+                Log.d("PostViewModel", "error: $e")
+            }
+        }
+    }
+
+    fun updatePost(postSupabaseData: PostSupabaseData) {
+        viewModelScope.launch {
+            val apiService = RetrofitClient.getSupabaseApiService()
+            try {
+                val response = apiService.updatePost(
+                    id = "eq.${postSupabaseData.id}",
+                    postSupabaseData = postSupabaseData
+                )
+                if (response.isSuccessful) {
+                    val updatedPost = response.body()
+                    Log.d("업데이트", "$updatedPost")
+                } else {
+                    Log.d("업데이트","실패")
+                }
+            } catch (e: Exception) {
+                Log.d("업데이트 실패", "$e")
+            }
+        }
+    }
+
 }
 

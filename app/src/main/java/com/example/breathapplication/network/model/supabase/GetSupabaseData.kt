@@ -17,8 +17,12 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GetSupabaseData(
+    @Json(name = "id")
+    val id: Int,
     @Json(name = "content")
     val content: String,
+    @Json(name = "created_at")
+    val created_at: String,
     @Json(name = "tag_1")
     val tag_1: Int,
     @Json(name = "tag_2")

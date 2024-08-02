@@ -69,6 +69,7 @@ import kotlin.math.roundToInt
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ContinueDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel){
+    diaryScreenViewModel.isComplete.value = false
     Column(
         Modifier
             .background(color = Greyscale11)
@@ -77,7 +78,7 @@ fun ContinueDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            CalendarScreen(diaryScreenViewModel)
         }
         LazyColumn(
             modifier = Modifier
@@ -137,6 +138,7 @@ fun ContinueDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                     SlideButton(diaryScreenViewModel)
                     Spacer(modifier = Modifier.height(38.dp))
                     CompleteButton(text = "작성 완료", onClick = {
+                        diaryScreenViewModel.postApiTest()
                         diaryScreenViewModel.continueShowDialog = true
                         diaryScreenViewModel.setCompleteSleepTag(diaryScreenViewModel.continueSleepTag.value)
                         diaryScreenViewModel.setCompleteConditionTag(diaryScreenViewModel.continueConditionTag.value)

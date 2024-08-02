@@ -3,12 +3,15 @@ package com.example.breathapplication.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.breathapplication.asleep.viewmodel.AsleepViewModel
 import com.example.breathapplication.navigation.diary.DiaryNavItem
 import com.example.breathapplication.navigation.setting.SettingNavItem
+import com.example.breathapplication.navigation.sleep.SleepNavItem
 import com.example.breathapplication.screen.diary.CompleteDiaryScreen
 import com.example.breathapplication.screen.diary.ContinueDiaryScreen
 import com.example.breathapplication.screen.diary.ReadDiaryScreen
@@ -19,12 +22,15 @@ import com.example.breathapplication.screen.setting.Pick
 import com.example.breathapplication.screen.setting.Profile
 import com.example.breathapplication.screen.setting.Push
 import com.example.breathapplication.screen.setting.Setting
+import com.example.breathapplication.screen.sleep.SleepIngScreen
+import com.example.breathapplication.screen.sleep.SleepScreen
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RootNavGraph(navController: NavHostController) {
     val diaryScreenViewModel : DiaryScreenViewModel = viewModel()
+    val asleepViewModel : AsleepViewModel = hiltViewModel()
 
     NavHost(navController = navController, startDestination = DiaryNavItem.WriteDiaryScreen.route) {
 
@@ -60,6 +66,14 @@ fun RootNavGraph(navController: NavHostController) {
         }
         composable(SettingNavItem.Help.route) {
             Help(navController)
+        }
+
+        /** Sleep */
+        composable(SleepNavItem.Sleep.route) {
+            SleepScreen(diaryScreenViewModel = diaryScreenViewModel, navController = navController, asleepViewModel)
+        }
+        composable(SleepNavItem.SleepIng.route) {
+            SleepIngScreen(navController = navController)
         }
     }
 

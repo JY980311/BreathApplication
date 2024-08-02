@@ -1,5 +1,6 @@
 package com.example.breathapplication.screen.diary
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -17,12 +18,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,10 +48,13 @@ import com.example.breathapplication.ui.theme.Primary2
 import com.example.breathapplication.ui.theme.Typography2
 import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: DiaryScreenViewModel) {
     val comment by diaryScreenViewModel.comment
+    val completeConditionTag by diaryScreenViewModel.completeConditionTag.collectAsState()
+    val slideValue by diaryScreenViewModel.slideValue.collectAsState()
 
     Column(
         Modifier
@@ -59,7 +65,24 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
     ) {
         TobBar(title = diaryScreenViewModel.TopbarDate.value, R.drawable.ic_calendar, R.drawable.ic_setting, navController, diaryScreenViewModel = diaryScreenViewModel)
         if(diaryScreenViewModel.isCalendarClicked.value){
-            CalendarScreen()
+            diaryScreenViewModel.isComplete.value = true
+            CalendarScreen(diaryScreenViewModel)
+        }
+        if(diaryScreenViewModel.isDiary.value){
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Text(
+                    text = "작성한 일기가 없습니다.",
+                    style = Typography2.subHead ,
+                    color = Greyscale5,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
         }
         LazyColumn(
             modifier = Modifier
@@ -91,7 +114,7 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                         color = Greyscale2
                     )
                     Spacer(modifier = Modifier.height(8.dp))
-                    MyMoodTag(listOf(diaryScreenViewModel.completeSleepTag.value))
+                    MyMoodTag(diaryScreenViewModel.completeSleepTag.value)
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
@@ -112,7 +135,7 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                             tint = Color.Unspecified,
                         )
                         Spacer(modifier = Modifier.width(14.dp))
-                        MySleepTag(diaryScreenViewModel.completeConditionTag.value)
+                        MySleepTag(completeConditionTag)
                     }
                     Spacer(modifier = Modifier.height(36.dp))
                     Box(
@@ -159,7 +182,7 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                     Spacer(modifier = Modifier.height(24.dp))
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = when(diaryScreenViewModel.slideValue.value) {
+                        text = when(slideValue) {
                             1 -> "BAD.."
                             2 -> "BAD.."
                             3 -> "SOSO!"

@@ -18,6 +18,13 @@ data class Date(
     val isSelected: Boolean,
     val isToday: Boolean
 ) {
+
+    // 날짜를 "yyyy-MM-dd" 형식의 문자열로 변환하는 메서드
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun toFormattedString(): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return date.format(formatter)
+    }
     val day: String @RequiresApi(Build.VERSION_CODES.O)
     get() = date.format(DateTimeFormatter.ofPattern("E"))  //TODO: 사용할지 모름 일단은 나중에 참고해서 지우기
 }

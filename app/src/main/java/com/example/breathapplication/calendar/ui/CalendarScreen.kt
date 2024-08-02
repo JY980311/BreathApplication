@@ -19,10 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.breathapplication.calendar.viewmodel.CalendarViewModel
 import com.example.breathapplication.ui.theme.Greyscale10
+import com.example.breathapplication.viewmodel.DiaryScreenViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CalendarScreen() {
+fun CalendarScreen(diaryScreenViewModel: DiaryScreenViewModel) {
     val calendarViewModel = remember { CalendarViewModel() }
     var calendarState by remember { mutableStateOf(calendarViewModel.getData(lastSelectedDate = calendarViewModel.today)) }
 
@@ -58,7 +59,7 @@ fun CalendarScreen() {
                 }
             )
             Spacer(modifier = Modifier.height(12.dp))
-            Content(viewModel = calendarViewModel)
+            Content(viewModel = calendarViewModel, diaryScreenViewModel = diaryScreenViewModel)
         }
     }
 }
@@ -67,5 +68,5 @@ fun CalendarScreen() {
 @Preview(showBackground = true)
 @Composable
 fun ContentPreview() {
-    CalendarScreen()
+    CalendarScreen(diaryScreenViewModel = DiaryScreenViewModel())
 }
