@@ -251,6 +251,7 @@ fun CompleteDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                     }
 
                 }
+                Spacer(modifier = Modifier.height(120.dp))
             }
         }
     }

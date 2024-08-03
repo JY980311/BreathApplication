@@ -143,6 +143,8 @@ fun ContinueDiaryScreen(navController: NavHostController, diaryScreenViewModel: 
                         diaryScreenViewModel.setCompleteSleepTag(diaryScreenViewModel.continueSleepTag.value)
                         diaryScreenViewModel.setCompleteConditionTag(diaryScreenViewModel.continueConditionTag.value)
                     })
+
+                    Spacer(modifier = Modifier.height(120.dp))
                 }
 
             }

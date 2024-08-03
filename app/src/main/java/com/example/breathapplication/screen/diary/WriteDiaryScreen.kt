@@ -78,7 +78,7 @@ fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: Dia
                 .padding(start = 20.dp, end = 20.dp, top = 24.dp),
         ) {
             item {
-                Column {
+                Column{
                     Text(
                         text = diaryScreenViewModel.subTitleDate.value,
                         style = Typography2.subTitle,
@@ -154,6 +154,9 @@ fun WriteDiaryScreen(navController: NavHostController, diaryScreenViewModel: Dia
                     diaryScreenViewModel.setReadDiaryText()
                     diaryScreenViewModel.setReadSleepTag(diaryScreenViewModel.getSelectedDisturbTag())
                 })
+                Spacer(modifier = Modifier.height(120.dp))
+
+
             }
         }
 

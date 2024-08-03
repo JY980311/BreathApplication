@@ -96,6 +96,7 @@ fun ReadDiaryScreen(navController: NavHostController, diaryScreenViewModel : Dia
                     NormalButton(text = "일기 수정하기", onClick = {
                         navController.popBackStack()
                     })
+                    Spacer(modifier = Modifier.height(120.dp))
                 }
             }
         }
